@@ -1,9 +1,10 @@
 // Import the Supabase client library
 import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm';
 
-// Get your Supabase credentials from Netlify's environment variables
-const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
-const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
+// --- PASTE YOUR SUPABASE INFO HERE ---
+const supabaseUrl = 'https://wditvvizexcwtkzllltn.supabase.co';
+const supabaseAnonKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6IndkaXR2dml6ZXhjd3RremxsbHRuIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTgxNDc4ODUsImV4cCI6MjA3MzcyMzg4NX0.6snZfp6_ktod8lS-AgYJlkPI397OmOCtgG06fmO816I';
+// -------------------------------------
 
 // Create the Supabase client
 const supabase = createClient(supabaseUrl, supabaseAnonKey);
@@ -24,9 +25,15 @@ async function loadStylistProfiles() {
         spinner.style.display = 'none';
     }
 
-    if (error) {
+    if (error || !stylists) {
         console.error('Error fetching stylists:', error);
-        grid.innerHTML = '<p>Error loading profiles. Please try again later.</p>';
+        grid.innerHTML = '<p>Could not load profiles. Please check your Supabase credentials and RLS policies.</p>';
+        return;
+    }
+    
+    // If there are no stylists, show a message
+    if (stylists.length === 0) {
+        grid.innerHTML = '<p>No stylist profiles found.</p>';
         return;
     }
 
