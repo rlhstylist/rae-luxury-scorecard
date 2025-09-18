@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KPI Scorecard - Rae Luxury</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        /* Scorecard-specific styles */
+        .scorecard-container {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+            padding: 20px;
+            max-width: 800px;
+            margin: auto;
+        }
+        .kpi-gauge {
+            position: relative;
+            text-align: center;
+            background-color: #2c2c2e;
+            padding: 15px;
+            border-radius: 15px;
+        }
+        .gauge-svg {
+            width: 100%;
+            max-width: 200px;
+            height: auto;
+            transform: rotate(-135deg); /* Start position for the arc */
+        }
+        .gauge-track, .gauge-progress {
+            fill: none;
+            stroke-width: 12;
+            stroke-linecap: round;
+        }
+        .gauge-track {
+            stroke: #444;
+        }
+        .gauge-progress {
+            stroke: #d4af37; /* Gold color for default */
+            transition: stroke-dashoffset 0.8s ease-in-out;
+        }
+        .gauge-text-container {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: #fff;
+        }
+        .gauge-percentage {
+            font-size: 2.5em;
+            font-weight: bold;
+        }
+        .gauge-label {
+            font-size: 0.9em;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: #aaa;
+        }
+        .nav-back-button {
+            display: block;
+            width: fit-content;
+            margin: 20px auto;
+            padding: 10px 20px;
+            background-color: #d4af37;
+            color: #000;
+            text-decoration: none;
+            border-radius: 5px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Daily Scorecard</h1>
+    </header>
+
+    <div class="scorecard-container">
+        <div class="kpi-gauge" data-kpi="reschedule_percent">
+            <svg class="gauge-svg" viewBox="0 0 100 100"></svg>
+            <div class="gauge-text-container">
+                <div class="gauge-percentage">0%</div>
+                <div class="gauge-label">Reschedule</div>
+            </div>
+        </div>
+        <div class="kpi-gauge" data-kpi="retail_per_ticket">
+            <svg class="gauge-svg" viewBox="0 0 100 100"></svg>
+            <div class="gauge-text-container">
+                <div class="gauge-percentage">$0</div>
+                <div class="gauge-label">Retail / Ticket</div>
+            </div>
+        </div>
+        <div class="kpi-gauge" data-kpi="new_client_prebook_percent">
+            <svg class="gauge-svg" viewBox="0 0 100 100"></svg>
+            <div class="gauge-text-container">
+                <div class="gauge-percentage">0%</div>
+                <div class="gauge-label">New Client Prebook</div>
+            </div>
+        </div>
+        <div class="kpi-gauge" data-kpi="color_add_on_percent">
+            <svg class="gauge-svg" viewBox="0 0 100 100"></svg>
+            <div class="gauge-text-container">
+                <div class="gauge-percentage">0%</div>
+                <div class="gauge-label">Color Add-On</div>
+            </div>
+        </div>
+    </div>
+
+    <a href="dashboard.html" class="nav-back-button">Back to Dashboard</a>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="scorecard.js"></script>
+</body>
+</html>```
+
+### 2. New File: `scorecard.js`
+
+Next, create the corresponding JavaScript file, `scorecard.js`. This script contains the logic to render the SVG dials and populate them with mock data for now.
+
+```javascript
+// scorecard.js
+
+document.addEventListener('DOMContentLoaded', () => {
+    // Mock data until SC-103/104 are complete.
+    // In the future, this will be fetched from Supabase and the compensation plan.
+    const kpiData = {
+        reschedule_percent: { value: 85, format: 'percent' },
+        retail_per_ticket: { value: 42, format: 'dollar' },
+        new_client_prebook_percent: { value: 92, format: 'percent' },
+        color_add_on_percent: { value: 48, format: 'percent' }
+    };
+
+    // Initialize all gauges on the page
+    const gauges = document.querySelectorAll('.kpi-gauge');
+    gauges.forEach(gauge => {
+        const kpiName = gauge.dataset.kpi;
+        const kpiInfo = kpiData[kpiName];
+        if (kpiInfo) {
+            createGauge(gauge, kpiInfo.value, kpiInfo.format);
+        }
+    });
+});
+
+function createGauge(gaugeElement, value, format) {
+    const svg = gaugeElement.querySelector('.gauge-svg');
+    const percentageText = gaugeElement.querySelector('.gauge-percentage');
+    const radius = 45; // ViewBox is 100x100, so center is 50,50
+    const circumference = 2 * Math.PI * radius;
+    
+    // We use a 270-degree arc, which is 75% of the circle
+    const arcLength = circumference * 0.75;
+    const offset = arcLength - (value / 100) * arcLength;
+
+    // SVG Namespace
+    const svgNS = "http://www.w3.org/2000/svg";
+
+    // Background Track
+    const track = document.createElementNS(svgNS, "circle");
+    track.setAttribute("cx", "50");
+    track.setAttribute("cy", "50");
+    track.setAttribute("r", radius);
+    track.setAttribute("class", "gauge-track");
+    track.setAttribute("stroke-dasharray", `${arcLength} ${circumference}`);
+    svg.appendChild(track);
+
+    // Progress Indicator
+    const progress = document.createElementNS(svgNS, "circle");
+    progress.setAttribute("cx", "50");
+    progress.setAttribute("cy", "50");
+    progress.setAttribute("r", radius);
+    progress.setAttribute("class", "gauge-progress");
+    progress.setAttribute("stroke-dasharray", `${arcLength} ${circumference}`);
+    // Set initial offset to full to animate from zero on load
+    progress.setAttribute("stroke-dashoffset", arcLength); 
+    svg.appendChild(progress);
+    
+    // Animate the progress bar and text after a short delay
+    setTimeout(() => {
+        progress.style.strokeDashoffset = offset;
+        updateText(percentageText, value, format);
+    }, 300);
+}
+
+function updateText(element, value, format) {
+    let finalValue;
+    if (format === 'percent') {
+        finalValue = `${value}%`;
+    } else if (format === 'dollar') {
+        finalValue = `$${value}`;
+    } else {
+        finalValue = value;
+    }
+    element.textContent = finalValue;
+}

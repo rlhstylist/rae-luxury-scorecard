@@ -268,3 +268,20 @@ footer a:hover {
 }
 #mark-complete-btn:hover { background-color: #000000; }
 #mark-complete-btn:disabled { background-color: #555555; cursor: not-allowed; }
+/* Add this to style.css */
+.nav-button {
+    display: block;
+    width: 80%;
+    max-width: 400px;
+    margin: 20px auto;
+    padding: 15px;
+    background-color: #d4af37; /* Gold theme color */
+    color: #000;
+    text-align: center;
+    text-decoration: none;
+    border-radius: 8px;
+    font-weight: bold;
+    font-size: 1.1em;
+}```
+
+With these files created and modified, the Core Scorecard UI is now established. The next steps will involve replacing the mock `kpiData` object with live data by implementing tasks `SC-103` and `SC-104`.
