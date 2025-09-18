@@ -8,11 +8,13 @@ const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZ
 ';
 const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
+// CORRECTED INITIALIZATION: The global 'supabase' object from the CDN script is used to create our client.
+const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
 // --- CORE FUNCTIONS ---
 
 // Displays the logged-in stylist's name.
 function displayStylistInfo(stylist) {
-    // This now correctly targets the <span> with id="stylist-name"
     const stylistNameEl = document.getElementById('stylist-name');
     if (stylistNameEl) {
         stylistNameEl.textContent = stylist.stylist_name;
@@ -22,9 +24,10 @@ function displayStylistInfo(stylist) {
 // Fetches and displays appointments for the logged-in stylist.
 async function displayAppointments(stylistId) {
     const appointmentList = document.getElementById('appointment-list');
-    appointmentList.innerHTML = '<div class="loading-spinner"></div>'; // Show spinner while loading
+    appointmentList.innerHTML = '<div class="loading-spinner"></div>';
 
-    const { data, error } = await supabase
+    // Use the correctly initialized supabaseClient
+    const { data, error } = await supabaseClient
         .from('appointments')
         .select('*')
         .eq('stylist_id', stylistId)
@@ -36,7 +39,7 @@ async function displayAppointments(stylistId) {
         return;
     }
 
-    appointmentList.innerHTML = ''; // Clear spinner
+    appointmentList.innerHTML = '';
     if (data.length === 0) {
         appointmentList.innerHTML = '<p>No appointments scheduled for today.</p>';
     } else {
@@ -62,12 +65,12 @@ async function displayAppointments(stylistId) {
 function initializeDashboard() {
     const loggedInStylist = JSON.parse(localStorage.getItem('loggedInStylist'));
     if (!loggedInStylist) {
-        window.location.href = 'index.html'; // Redirect if not logged in
+        window.location.href = 'index.html';
         return;
     }
     displayStylistInfo(loggedInStylist);
     displayAppointments(loggedInStylist.stylist_id);
-    initializeKpiDials(); // Initialize the KPI dials
+    initializeKpiDials();
 }
 
 // --- KPI DIAL LOGIC ---
@@ -121,7 +124,7 @@ function createKpiDial(data) {
 }
 
 function animateValue(element, end, duration, format) {
-    if (!element) return; // Guard clause to prevent errors
+    if (!element) return;
     let start = 0;
     const range = end - start;
     let startTime = null;
