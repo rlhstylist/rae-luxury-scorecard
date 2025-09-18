@@ -140,7 +140,7 @@ footer a {
 footer a:hover {
     text-decoration: underline;
 }
-/* Checklist Page Styles (V8 - Corrected Icon & Precise Timing) */
+/* Checklist Page Styles (V9 - Final: No "Bump" & Reliable SVG File) */
 #action-item-container {
     display: flex;
     flex-direction: column;
@@ -164,7 +164,10 @@ footer a:hover {
     transition: all 0.5s cubic-bezier(0.890, -0.170, 0.140, 1.225);
 }
 
-/* --- NEW: Simplified, reliable SVG icon using currentColor --- */
+/* --- FIX: Removed the :active transform to prevent the "bump" --- */
+/* The :active pseudo-class has been removed. */
+
+/* --- FIX: Using the reliable shears.svg file from the assets folder --- */
 .action-item-slice::before {
     content: '';
     height: 28px;
@@ -173,22 +176,25 @@ footer a:hover {
     top: 50%;
     right: -40px;
     transform: translateY(-50%) rotate(100deg);
-    /* The animation for the shears themselves */
     transition: all 0.5s cubic-bezier(0.890, -0.170, 0.140, 1.225);
     z-index: 3;
     
-    /* This is the new, corrected SVG icon */
-    background-color: currentColor; /* Inherits the button's text color */
-    -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Cpath d='M329.8 217.3c-2.4-2.4-5.5-3.6-8.5-3.6s-6.1 1.2-8.5 3.6L208 322.1l-61.1-61.1c-4.7-4.7-12.3-4.7-17 0l-17 17c-4.7 4.7-4.7 12.3 0 17l86.6 86.6c4.7 4.7 12.3 4.7 17 0l114.8-114.8c4.7-4.7 4.7-12.3 0-17l-17-17z'/%3E%3Cpath d='M206.8 68.2c-2.4-2.4-5.5-3.6-8.5-3.6s-6.1 1.2-8.5 3.6L85 173.1c-4.7 4.7-4.7 12.3 0 17l17 17c4.7 4.7 12.3 4.7 17 0l104.8-104.8c4.7-4.7 4.7-12.3 0-17l-17-17zM151.2 443.8c-2.4-2.4-5.5-3.6-8.5-3.6s-6.1 1.2-8.5 3.6L29.4 338.9c-4.7 4.7-4.7 12.3 0 17l17 17c4.7 4.7 12.3 4.7 17 0l104.8-104.8c4.7-4.7 4.7-12.3 0-17l-17-17z'/%3E%3Cpath d='M443.8 151.2c-2.4-2.4-5.5-3.6-8.5-3.6s-6.1 1.2-8.5 3.6L322.1 256l-61.1-61.1c-4.7-4.7-12.3-4.7-17 0l-17 17c-4.7 4.7-4.7 12.3 0 17l86.6 86.6c4.7 4.7 12.3 4.7 17 0l114.8-114.8c4.7-4.7 4.7-12.3 0-17l-17-17z'/%3E%3C/svg%3E");
-    mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 384 512'%3E%3Cpath d='M352 128C369.7 128 384 113.7 384 96C384 78.33 369.7 64 352 64H224V32C224 14.33 209.7 0 192 0C174.3 0 160 14.33 160 32V64H32C14.33 64 0 78.33 0 96C0 113.7 14.33 128 32 128H102.8L153.2 344.3L32 448C14.33 448 0 462.3 0 480C0 497.7 14.33 512 32 512H160V480C160 462.3 174.3 448 192 448C209.7 448 224 462.3 224 480V512H352C369.7 512 384 497.7 384 480C384 462.3 369.7 448 352 448H281.2L230.8 288.5L352 128Z'/%3E%3C/svg%3E");
+    background-color: currentColor; /* Inherits text color */
+    -webkit-mask-image: url('assets/shears.svg'); /* Reference the file */
+    mask-image: url('assets/shears.svg');      /* Reference the file */
+    -webkit-mask-size: contain;
     mask-size: contain;
+    -webkit-mask-repeat: no-repeat;
+    mask-repeat: no-repeat;
+    -webkit-mask-position: center;
+    mask-position: center;
 }
 
 .action-item-slice::after {
     content: '';
     height: 2px;
     width: 0;
-    background-color: currentColor; /* Inherits the button's text color */
+    background-color: currentColor;
     position: absolute;
     top: 50%;
     right: 0;
@@ -202,14 +208,12 @@ footer a:hover {
     position: relative;
     height: 12px;
     overflow: hidden;
-    /* The text split transition */
     transition: all 0.3s cubic-bezier(1.000, -0.055, 0.025, 1.040);
 }
 
-/* --- MODIFIED: On the .active state, we now DELAY the split --- */
 .action-item-slice.active .top,
 .action-item-slice.active .bottom {
-    transition-delay: 0.25s; /* This is your requested 0.25s delay */
+    transition-delay: 0.25s; /* 0.25s delay before the text splits */
 }
 
 .action-item-slice .top { top: 0; transition-delay: 0s; }
