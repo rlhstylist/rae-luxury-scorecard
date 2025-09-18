@@ -286,12 +286,14 @@ footer a:hover {
 
 With these files created and modified, the Core Scorecard UI is now established. The next steps will involve replacing the mock `kpiData` object with live data by implementing tasks `SC-103` and `SC-104`.
 /* === Integrated Scorecard Styles === */
-/* === Refined KPI Header Summary Styles === */
+
+/* === Refined KPI Header Summary Styles (Corrected) === */
 #kpi-summary-container {
     display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 10px;
-    padding: 20px 10px;
+    /* Mobile First: 2x2 grid is the default */
+    grid-template-columns: repeat(2, 1fr);
+    gap: 15px;
+    padding: 15px;
     max-width: 900px;
     margin: 0 auto;
 }
@@ -333,7 +335,7 @@ With these files created and modified, the Core Scorecard UI is now established.
 
 .kpi-dial-progress {
     stroke: url(#gradient-gold); /* Default to gold gradient */
-    transition: stroke-dashoffset 1.2s cubic-bezier(0.25, 0.8, 0.25, 1); /* Smooth animation */
+    transition: stroke-dashoffset 1.2s cubic-bezier(0.25, 0.8, 0.25, 1);
 }
 
 .kpi-value-container {
@@ -367,18 +369,11 @@ With these files created and modified, the Core Scorecard UI is now established.
     font-size: 0.7em;
 }
 
-/* Responsive adjustments for smaller screens */
-@media (max-width: 600px) {
+/* Desktop: Switch to a 4-column grid on wider screens */
+@media (min-width: 601px) {
     #kpi-summary-container {
-        grid-template-columns: repeat(2, 1fr);
-        gap: 15px;
-        padding: 15px;
-    }
-    .kpi-dial-container {
-        width: 90px;
-        height: 90px;
-    }
-    .kpi-current-value {
-        font-size: 1.6em;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 10px;
+        padding: 20px 10px;
     }
 }

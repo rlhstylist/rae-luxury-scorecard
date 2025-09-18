@@ -65,129 +65,78 @@ initializeDashboard();
 
 // === KPI SCORECARD LOGIC ===
 
-// === Refined KPI Scorecard Logic ===
+// === Refined KPI Scorecard Logic (Corrected) ===
 
 document.addEventListener('DOMContentLoaded', () => {
-    // This is the main function that kicks everything off.
     initializeKpiDials();
 });
 
 function initializeKpiDials() {
-    // New, correct KPIs with our three required data points.
-    // In the future, this object will be built from Supabase data.
     const kpiData = {
-        avg_service: {
-            label: "Avg. Service",
-            current: 125,
-            goal: 110,
-            target: 140,
-            format: 'dollar'
-        },
-        avg_retail: {
-            label: "Avg. Retail",
-            current: 42,
-            goal: 50,
-            target: 65,
-            format: 'dollar'
-        },
-        rebook: {
-            label: "Rebook %",
-            current: 85,
-            goal: 80,
-            target: 92,
-            format: 'percent'
-        },
-        productivity: {
-            label: "Productivity %",
-            current: 93,
-            goal: 95,
-            target: 98,
-            format: 'percent'
-        }
+        avg_service: { label: "Avg. Service", current: 125, goal: 110, target: 140, format: 'dollar' },
+        avg_retail: { label: "Avg. Retail", current: 42, goal: 50, target: 65, format: 'dollar' },
+        rebook: { label: "Rebook %", current: 85, goal: 80, target: 92, format: 'percent' },
+        productivity: { label: "Productivity %", current: 93, goal: 95, target: 98, format: 'percent' }
     };
 
     const container = document.getElementById('kpi-summary-container');
-    container.innerHTML = ''; // Clear any previous content
+    if (!container) {
+        console.error("KPI container not found!");
+        return;
+    }
+    container.innerHTML = ''; // Clear previous content
 
-    // Create a dial for each KPI in our data
-    for (const [key, value] of Object.entries(kpiData)) {
-        createKpiDial(container, value);
+    for (const data of Object.values(kpiData)) {
+        container.appendChild(createKpiDial(data));
     }
 }
 
-function createKpiDial(container, data) {
-    // 1. Create the card structure
+function createKpiDial(data) {
+    const svgNS = "http://www.w3.org/2000/svg";
     const card = document.createElement('div');
     card.className = 'kpi-card';
 
-    const dialContainer = document.createElement('div');
-    dialContainer.className = 'kpi-dial-container';
+    // Using innerHTML for the static structure is more reliable
+    card.innerHTML = `
+        <div class="kpi-dial-container">
+            <svg class="kpi-dial-svg" viewBox="0 0 100 100">
+                <circle class="kpi-dial-track" cx="50" cy="50" r="45"></circle>
+                <circle class="kpi-dial-progress" cx="50" cy="50" r="45"></circle>
+            </svg>
+            <div class="kpi-value-container">
+                <div class="kpi-current-value">0</div>
+            </div>
+        </div>
+        <div class="kpi-label">${data.label}</div>
+        <div class="kpi-target">TARGET: ${data.format === 'dollar' ? '$' : ''}${data.target}${data.format === 'percent' ? '%' : ''}</div>
+    `;
 
-    const svg = document.createElementNS("http://www.w.org/2000/svg", "svg");
-    svg.setAttribute('class', 'kpi-dial-svg');
-    svg.setAttribute('viewBox', '0 0 100 100');
-
-    const valueContainer = document.createElement('div');
-    valueContainer.className = 'kpi-value-container';
+    // --- Dynamic SVG and Animation Logic ---
+    const progressCircle = card.querySelector('.kpi-dial-progress');
+    const currentValueEl = card.querySelector('.kpi-current-value');
     
-    const currentValueEl = document.createElement('div');
-    currentValueEl.className = 'kpi-current-value';
-    currentValueEl.textContent = '0'; // Start at 0 for animation
-
-    const labelEl = document.createElement('div');
-    labelEl.className = 'kpi-label';
-    labelEl.textContent = data.label;
-
-    const targetEl = document.createElement('div');
-    targetEl.className = 'kpi-target';
-    targetEl.textContent = `TARGET: ${data.format === 'dollar' ? '$' : ''}${data.target}${data.format === 'percent' ? '%' : ''}`;
-
-    // Assemble the card
-    valueContainer.appendChild(currentValueEl);
-    dialContainer.appendChild(svg);
-    dialContainer.appendChild(valueContainer);
-    card.appendChild(dialContainer);
-    card.appendChild(labelEl);
-    card.appendChild(targetEl);
-    container.appendChild(card);
-
-    // 2. SVG Dial Logic
     const radius = 45;
     const circumference = 2 * Math.PI * radius;
-    // We use a 240-degree arc (66.6% of the circle) for a more refined look
-    const arcLength = circumference * (240 / 360);
-
+    const arcLength = circumference * (240 / 360); // 240-degree arc
+    
     const progressPercentage = Math.min((data.current / data.goal) * 100, 100);
     const offset = arcLength - (progressPercentage / 100) * arcLength;
 
-    // Create track and progress circles
-    const track = document.createElementNS("http://www.w3.org/2000/svg", "circle");
-    track.setAttribute('class', 'kpi-dial-track');
-    track.setAttribute('cx', '50'); track.setAttribute('cy', '50'); track.setAttribute('r', radius);
-    track.setAttribute('stroke-dasharray', `${arcLength} ${circumference}`);
-    
-    const progress = document.createElementNS("http://www.w3.org/2000/svg", "circle");
-    progress.setAttribute('class', 'kpi-dial-progress');
-    progress.setAttribute('cx', '50'); progress.setAttribute('cy', '50'); progress.setAttribute('r', radius);
-    progress.setAttribute('stroke-dasharray', `${arcLength} ${circumference}`);
-    progress.setAttribute('stroke-dashoffset', arcLength); // Start empty
+    // Set track and initial progress attributes
+    card.querySelector('.kpi-dial-track').setAttribute('stroke-dasharray', `${arcLength} ${circumference}`);
+    progressCircle.setAttribute('stroke-dasharray', `${arcLength} ${circumference}`);
+    progressCircle.setAttribute('stroke-dashoffset', arcLength); // Start empty
 
-    // Check if goal is met for coloring
     if (data.current >= data.goal) {
-        progress.style.stroke = 'url(#gradient-green)';
+        progressCircle.style.stroke = 'url(#gradient-green)';
     }
 
-    svg.appendChild(track);
-    svg.appendChild(progress);
-
-    // 3. Animation Logic
     setTimeout(() => {
-        // Animate the dial
-        progress.style.strokeDashoffset = offset;
-        
-        // Animate the number count-up
+        progressCircle.style.strokeDashoffset = offset;
         animateValue(currentValueEl, data.current, 1200, data.format);
-    }, 500); // Small delay to ensure it animates on load
+    }, 500);
+
+    return card;
 }
 
 function animateValue(element, end, duration, format) {
@@ -210,6 +159,9 @@ function animateValue(element, end, duration, format) {
 
         if (progress < 1) {
             window.requestAnimationFrame(step);
+        } else {
+            // Ensure final value is exact
+            element.textContent = (format === 'dollar' ? '$' : '') + end + (format === 'percent' ? '%' : '');
         }
     }
     window.requestAnimationFrame(step);
