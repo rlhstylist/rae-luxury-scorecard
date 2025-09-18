@@ -71,7 +71,6 @@ header p {
     font-weight: 400;
 }
 
-/* Loading Spinner Animation */
 .loading-spinner {
     border: 4px solid rgba(0, 0, 0, 0.1);
     width: 36px;
@@ -83,14 +82,10 @@ header p {
 }
 
 @keyframes spin {
-    0% {
-        transform: rotate(0deg);
-    }
-    100% {
-        transform: rotate(360deg);
-    }
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
 }
-/* Dashboard Styles */
+
 .appointment-list {
     max-width: 800px;
     margin: 2rem auto;
@@ -140,7 +135,7 @@ footer a {
 footer a:hover {
     text-decoration: underline;
 }
-/* Checklist Page Styles (V13 - The True Final Animation) */
+
 #action-item-container {
     display: flex;
     flex-direction: column;
@@ -161,16 +156,13 @@ footer a:hover {
     background-color: var(--card-background);
     cursor: pointer;
     position: relative;
-    /* Note: No overflow:hidden */
     transition: all 0.5s cubic-bezier(0.890, -0.170, 0.140, 1.225);
 }
 
-/* The Cutline Element */
 .action-item-slice::after {
     content: '';
     height: 2px;
     width: 0;
-    /* The cutline is always black */
     background-color: var(--text-primary); 
     position: absolute;
     top: 50%;
@@ -179,14 +171,12 @@ footer a:hover {
     transition: all 0.5s cubic-bezier(0.890, -0.170, 0.140, 1.225);
 }
 
-/* The Slicing Text Elements */
 .action-item-slice .top,
 .action-item-slice .bottom {
     position: relative;
     height: 12px;
     overflow: hidden;
     transition: all 0.3s cubic-bezier(1.000, -0.055, 0.025, 1.040);
-    /* The text will split after a 0.25s delay */
     transition-delay: 0.25s; 
 }
 
@@ -194,39 +184,32 @@ footer a:hover {
 .action-item-slice .bottom { bottom: 0; }
 .action-item-slice .bottom span { position: absolute; top: -12px; left: 0; width: 100%; }
 
-/* --- The Animation When Active --- */
 .action-item-slice.active {
-    color: white; /* Text turns white */
+    color: white;
     border-color: #34D393;
-    background-color: #34D399; /* Background turns green */
+    background-color: #34D399;
 }
 
 .action-item-slice.active::after {
     width: 100%;
-    /* --- THIS IS THE KEY --- */
-    /* We DO NOT change the background color here, so it stays black */
 }
 
-/* Reset the delay so the text splits immediately */
 .action-item-slice.active .top { top: -8px; transition-delay: 0s; }
 .action-item-slice.active .bottom { bottom: -8px; transition-delay: 0s; }
 
-/* --- Main Button Styles (Unchanged) --- */
-.button-container, #mark-complete-btn {
+#mark-complete-btn, .button-container {
     max-width: 600px; margin: 2rem auto; padding: 0 1rem;
 }
+
 #mark-complete-btn {
     font-family: var(--font-family); font-size: 1.2rem; font-weight: 500; width: 100%; color: white;
     background-color: var(--text-primary); border: none; border-radius: 12px; padding: 1rem; cursor: pointer;
     transition: background-color 0.2s;
 }
+
 #mark-complete-btn:hover { background-color: #000000; }
-/* Style for the "Mark Complete" button when it's disabled */
-#mark-complete-btn:disabled {
-    background-color: #555555;
-    cursor: not-allowed;
-}
-/* Tiered Reward Styles (V3 - Inline SVG) */
+#mark-complete-btn:disabled { background-color: #555555; cursor: not-allowed; }
+
 .appointment-card.is-complete {
     position: relative;
 }
@@ -241,51 +224,18 @@ footer a:hover {
     background-color: rgba(0, 0, 0, 0.3);
 }
 
-/* --- NEW: Simple styling for our reliable inline SVG icon --- */
 .tier-icon {
     position: absolute;
     top: 10px;
     right: 15px;
     width: 24px;
     height: 24px;
-    /* The SVG will automatically inherit its color from the tier class */
 }
 
-/* Set the colors for each tier */
 .appointment-card.tier-gold { color: #D4AF37; }
 .appointment-card.tier-silver { color: #C0C0C0; }
 .appointment-card.tier-bronze { color: #CD7F32; }
 .appointment-card.tier-sad { color: #888888; }
-
-/* --- Main Button Styles (Unchanged) --- */
-#mark-complete-btn, .button-container {
-    max-width: 600px; margin: 2rem auto; padding: 0 1rem;
-}
-#mark-complete-btn {
-    font-family: var(--font-family); font-size: 1.2rem; font-weight: 500; width: 100%; color: white;
-    background-color: var(--text-primary); border: none; border-radius: 12px; padding: 1rem; cursor: pointer;
-    transition: background-color 0.2s;
-}
-#mark-complete-btn:hover { background-color: #000000; }
-#mark-complete-btn:disabled { background-color: #555555; cursor: not-allowed; }
-/* Add this to style.css */
-.nav-button {
-    display: block;
-    width: 80%;
-    max-width: 400px;
-    margin: 20px auto;
-    padding: 15px;
-    background-color: #d4af37; /* Gold theme color */
-    color: #000;
-    text-align: center;
-    text-decoration: none;
-    border-radius: 8px;
-    font-weight: bold;
-    font-size: 1.1em;
-}```
-
-With these files created and modified, the Core Scorecard UI is now established. The next steps will involve replacing the mock `kpiData` object with live data by implementing tasks `SC-103` and `SC-104`.
-/* === Integrated Scorecard Styles === */
 
 /* === Refined KPI Header Summary Styles (Final Version) === */
 #kpi-summary-container {
