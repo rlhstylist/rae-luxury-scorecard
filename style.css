@@ -298,16 +298,14 @@ With these files created and modified, the Core Scorecard UI is now established.
     margin: 0 auto;
 }
 
+/* Find and replace the .kpi-card rule in style.css */
 .kpi-card {
-    background-color: #2c2c2e;
-    border-radius: 18px;
-    padding: 15px 10px;
+    /* REMOVED background-color, border-radius, padding, and box-shadow */
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: space-between;
     text-align: center;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.2);
 }
 
 .kpi-dial-container {
