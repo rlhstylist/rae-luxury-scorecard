@@ -13,9 +13,9 @@ const supabase = createClient(supabaseUrl, supabaseAnonKey);
 async function loadStylistProfiles() {
     const grid = document.getElementById('stylist-selection-grid');
 
-    // Fetch data from the 'Stylists' table
+    // Fetch data from the 'stylists' table (with a lowercase 's')
     const { data: stylists, error } = await supabase
-        .from('stylists')
+        .from('stylists') // <--- THIS IS THE FIX
         .select('*')
         .order('name'); // Sort them alphabetically
 
@@ -51,11 +51,15 @@ async function loadStylistProfiles() {
         tile.appendChild(name);
         tile.appendChild(level);
 
-        // Add click event listener for future navigation
-        tile.addEventListener('click', () => {
-            // Store selected stylist info and navigate (we'll build this next)
-            alert(`Selected: ${stylist.name}`);
-        });
+        // Add click event listener to save stylist info and navigate
+tile.addEventListener('click', () => {
+    // Store the entire stylist object in the browser's local storage
+    // We use JSON.stringify to convert the object to a string for storage
+    localStorage.setItem('selectedStylist', JSON.stringify(stylist));
+
+    // Redirect the browser to the new dashboard page
+    window.location.href = 'dashboard.html';
+});
 
         grid.appendChild(tile);
     }
