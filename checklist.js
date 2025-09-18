@@ -26,9 +26,9 @@ async function loadActionItems() {
         return;
     }
 
-    // --- NEW: SVG code for our checkmark icon ---
+    // --- NEW: Updated SVG code for the animatable checkmark ---
     const checkmarkSVG = `
-        <svg class="check-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor">
+        <svg class="check-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5" />
         </svg>
     `;
@@ -38,16 +38,10 @@ async function loadActionItems() {
         button.className = 'action-item-toggle';
         button.dataset.itemId = item.id;
         
-        // --- NEW: Add the text and the SVG icon to the button ---
         button.innerHTML = `<span>${item.title}</span>` + checkmarkSVG;
 
         button.addEventListener('click', () => {
             button.classList.toggle('active');
-
-            // --- NEW: Add haptic feedback if the browser supports it ---
-            if (window.navigator.vibrate) {
-                window.navigator.vibrate(50); // A short 50ms vibration
-            }
         });
 
         container.appendChild(button);

@@ -140,7 +140,7 @@ footer a {
 footer a:hover {
     text-decoration: underline;
 }
-/* Checklist Page Styles (V2 - Lush Color Wipe) */
+/* Checklist Page Styles (V3 - Animated Checkmark & "Thunk" Effect) */
 #action-item-container {
     display: flex;
     flex-direction: column;
@@ -163,19 +163,16 @@ footer a:hover {
     cursor: pointer;
     box-shadow: 0 4px 15px var(--shadow-color);
     transition: transform 0.1s ease-out;
-    
-    /* --- NEW: Prepare the button for the animation --- */
     position: relative;
-    overflow: hidden; /* This is crucial for the wipe effect */
-    z-index: 1; /* Ensures content stays above the wipe */
+    overflow: hidden;
+    z-index: 1;
 }
 
-/* --- NEW: The "press down" effect is still here --- */
+/* --- NEW: Deeper "press down" effect --- */
 .action-item-toggle:active {
-    transform: scale(0.97);
+    transform: scale(0.96);
 }
 
-/* --- NEW: The color wipe layer --- */
 .action-item-toggle::before {
     content: '';
     position: absolute;
@@ -183,66 +180,60 @@ footer a:hover {
     left: 0;
     width: 100%;
     height: 100%;
-    background-color: #34D399; /* Our luxury green */
-    
-    /* Start with the layer hidden to the left */
-    transform: translateX(-101%); 
-    
-    /* Define a smooth, satisfying transition speed */
-    transition: transform 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    background-color: #34D399;
+    transform: translateX(-101%);
+    /* --- NEW: Slower, more deliberate transition for the "thunk" --- */
+    transition: transform 0.4s cubic-bezier(0.23, 1, 0.32, 1);
     z-index: -1;
 }
 
-/* --- NEW: When the button is active, slide the wipe layer into view --- */
 .action-item-toggle.active::before {
     transform: translateX(0);
 }
 
-/* --- NEW: Make the text and icon change color smoothly --- */
-.action-item-toggle span,
-.action-item-toggle .check-icon {
-    position: relative;
-    transition: color 0.3s ease-out, filter 0.3s ease-out;
+/* --- NEW: Text now fades out when active --- */
+.action-item-toggle span {
+    transition: opacity 0.2s ease-out;
 }
-
 .action-item-toggle.active span {
-    color: white;
+    opacity: 0;
 }
 
-/* We will keep the checkmark logic from before */
+/* --- NEW: Styles for the animated checkmark --- */
 .check-icon {
-    width: 24px;
-    height: 24px;
-    opacity: 0;
-    transition: opacity 0.2s ease-out 0.1s; /* Add a slight delay */
-    filter: invert(1) brightness(2);
+    position: absolute; /* Place it in the center of the button */
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 32px; /* Make it slightly larger */
+    height: 32px;
+    opacity: 0; /* Hidden by default */
+}
+
+.check-icon path {
+    stroke: white; /* Make the checkmark white */
+    stroke-width: 3; /* A nice, bold line */
+    /* This is the magic for the drawing animation */
+    stroke-dasharray: 26;
+    stroke-dashoffset: 26;
+    transition: stroke-dashoffset 0.4s ease-out 0.2s, opacity 0.2s ease-out 0.1s; /* Animate the draw with a delay */
 }
 
 .action-item-toggle.active .check-icon {
     opacity: 1;
 }
 
-/* --- Main Button Styles (Unchanged) --- */
-.button-container {
-    max-width: 600px;
-    margin: 2rem auto;
-    padding: 0 1rem;
+.action-item-toggle.active .check-icon path {
+    stroke-dashoffset: 0; /* This draws the checkmark */
 }
 
+/* --- Main Button Styles (Unchanged) --- */
+.button-container, #mark-complete-btn {
+    max-width: 600px; margin: 2rem auto; padding: 0 1rem;
+}
 #mark-complete-btn {
-    font-family: var(--font-family);
-    font-size: 1.2rem;
-    font-weight: 500;
-    width: 100%;
-    color: white;
-    background-color: var(--text-primary);
-    border: none;
-    border-radius: 12px;
-    padding: 1rem;
-    cursor: pointer;
+    font-family: var(--font-family); font-size: 1.2rem; font-weight: 500; width: 100%; color: white;
+    background-color: var(--text-primary); border: none; border-radius: 12px; padding: 1rem; cursor: pointer;
     transition: background-color 0.2s;
 }
-
-#mark-complete-btn:hover {
-    background-color: #000000;
-}
+#mark-complete-btn:hover { background-color: #000000; }
