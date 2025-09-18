@@ -63,9 +63,7 @@ function initializeDashboard() { const s = getLoggedInStylist(); if (s) { displa
 initializeDashboard();
 // Add this entire block to the end of your existing dashboard.js file
 
-// === KPI SCORECARD LOGIC ===
-
-// === Refined KPI Scorecard Logic (Corrected) ===
+// === Refined KPI Scorecard Logic (Corrected Full Block) ===
 
 document.addEventListener('DOMContentLoaded', () => {
     initializeKpiDials();
@@ -91,12 +89,11 @@ function initializeKpiDials() {
     }
 }
 
-// Replace the existing createKpiDial function in dashboard.js with this one.
-
 function createKpiDial(data) {
     const card = document.createElement('div');
     card.className = 'kpi-card';
 
+    // Using innerHTML for the static structure is more reliable
     card.innerHTML = `
         <div class="kpi-dial-container">
             <svg class="kpi-dial-svg" viewBox="0 0 100 100">
@@ -111,21 +108,23 @@ function createKpiDial(data) {
         <div class="kpi-target">TARGET: ${data.format === 'dollar' ? '$' : ''}${data.target}${data.format === 'percent' ? '%' : ''}</div>
     `;
 
+    // --- Dynamic SVG and Animation Logic ---
     const progressCircle = card.querySelector('.kpi-dial-progress');
     const currentValueEl = card.querySelector('.kpi-current-value');
     
     const radius = 45;
     const circumference = 2 * Math.PI * radius;
-    const arcLength = circumference * (240 / 360);
+    const arcLength = circumference * (240 / 360); // 240-degree arc
     
     const progressPercentage = Math.min((data.current / data.goal) * 100, 100);
     const offset = arcLength - (progressPercentage / 100) * arcLength;
 
+    // Set track and initial progress attributes
     card.querySelector('.kpi-dial-track').setAttribute('stroke-dasharray', `${arcLength} ${circumference}`);
     progressCircle.setAttribute('stroke-dasharray', `${arcLength} ${circumference}`);
-    progressCircle.setAttribute('stroke-dashoffset', arcLength);
+    progressCircle.setAttribute('stroke-dashoffset', arcLength); // Start empty
 
-    // --- NEW Three-Tier Color Logic ---
+    // --- Three-Tier Color Logic ---
     let dialColorUrl;
     if (data.current >= data.target) {
         // Met or exceeded WEEKLY goal
@@ -138,7 +137,7 @@ function createKpiDial(data) {
         dialColorUrl = 'url(#gradient-red)';
     }
     progressCircle.style.stroke = dialColorUrl;
-    // --- End of New Logic ---
+    // --- End of Color Logic ---
 
     setTimeout(() => {
         progressCircle.style.strokeDashoffset = offset;
@@ -146,7 +145,7 @@ function createKpiDial(data) {
     }, 500);
 
     return card;
-}}
+}
 
 function animateValue(element, end, duration, format) {
     let start = 0;
