@@ -140,7 +140,7 @@ footer a {
 footer a:hover {
     text-decoration: underline;
 }
-/* Checklist Page Styles (V9 - Final: No "Bump" & Reliable SVG File) */
+/* Checklist Page Styles (V10 - Final Animation: No Shake, Reliable Icon) */
 #action-item-container {
     display: flex;
     flex-direction: column;
@@ -161,46 +161,31 @@ footer a:hover {
     background-color: var(--card-background);
     cursor: pointer;
     position: relative;
-    transition: all 0.5s cubic-bezier(0.890, -0.170, 0.140, 1.225);
+    overflow: hidden; /* Keep the overflow hidden */
+    transition: color 0.5s ease, border-color 0.5s ease, background-color 0.5s ease;
 }
 
-/* --- FIX: Removed the :active transform to prevent the "bump" --- */
-/* The :active pseudo-class has been removed. */
-
-/* --- FIX: Using the reliable shears.svg file from the assets folder --- */
-.action-item-slice::before {
-    content: '';
+/* --- NEW: Styling the <img> tag directly --- */
+.shears-icon {
     height: 28px;
     width: 28px;
     position: absolute;
     top: 50%;
-    right: -40px;
-    transform: translateY(-50%) rotate(100deg);
-    transition: all 0.5s cubic-bezier(0.890, -0.170, 0.140, 1.225);
-    z-index: 3;
+    left: 105%; /* Start just off-screen to the right */
     
-    background-color: currentColor; /* Inherits text color */
-    -webkit-mask-image: url('assets/shears.svg'); /* Reference the file */
-    mask-image: url('assets/shears.svg');      /* Reference the file */
-    -webkit-mask-size: contain;
-    mask-size: contain;
-    -webkit-mask-repeat: no-repeat;
-    mask-repeat: no-repeat;
-    -webkit-mask-position: center;
-    mask-position: center;
+    /* --- FIX: Use transform for smooth, hardware-accelerated animation --- */
+    transform: translateY(-50%) rotate(100deg);
+    transition: transform 0.6s cubic-bezier(0.890, -0.170, 0.140, 1.225), filter 0.5s ease;
+    
+    /* A hint to the browser to optimize this element for animation */
+    will-change: transform;
 }
 
-.action-item-slice::after {
-    content: '';
-    height: 2px;
-    width: 0;
-    background-color: currentColor;
-    position: absolute;
-    top: 50%;
-    right: 0;
-    transform: translateY(-50%);
-    transition: all 0.5s cubic-bezier(0.890, -0.170, 0.140, 1.225);
-    z-index: 2;
+.action-item-slice.active .shears-icon {
+    /* --- Animate the icon across the entire button --- */
+    transform: translateY(-50%) rotate(45deg) translateX(-250%);
+    /* --- This will turn the black SVG white when active --- */
+    filter: brightness(0) invert(1);
 }
 
 .action-item-slice .top,
@@ -213,7 +198,7 @@ footer a:hover {
 
 .action-item-slice.active .top,
 .action-item-slice.active .bottom {
-    transition-delay: 0.25s; /* 0.25s delay before the text splits */
+    transition-delay: 0.25s;
 }
 
 .action-item-slice .top { top: 0; transition-delay: 0s; }
@@ -224,15 +209,6 @@ footer a:hover {
     color: white;
     border-color: #34D393;
     background-color: #34D399;
-}
-
-.action-item-slice.active::before {
-    right: 110%;
-    transform: translateY(-50%) rotate(45deg);
-}
-
-.action-item-slice.active::after {
-    width: 100%;
 }
 
 .action-item-slice.active .top { top: -8px; }

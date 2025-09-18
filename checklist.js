@@ -28,15 +28,28 @@ async function loadActionItems() {
 
     for (const item of actionItems) {
         const button = document.createElement('button');
-        // --- NEW: The class name is now action-item-slice ---
-        button.className = 'action-item-slice'; 
+        button.className = 'action-item-slice';
         button.dataset.itemId = item.id;
         
-        // --- NEW: Create the required HTML structure for the slicing effect ---
-        button.innerHTML = `
-            <div class="top"><span>${item.title}</span></div>
-            <div class="bottom"><span>${item.title}</span></div>
-        `;
+        // --- NEW: Create elements individually for more control ---
+        const topDiv = document.createElement('div');
+        topDiv.className = 'top';
+        topDiv.innerHTML = `<span>${item.title}</span>`;
+
+        const bottomDiv = document.createElement('div');
+        bottomDiv.className = 'bottom';
+        bottomDiv.innerHTML = `<span>${item.title}</span>`;
+
+        // --- NEW: Create the <img> tag for the shears ---
+        const shearsIcon = document.createElement('img');
+        shearsIcon.className = 'shears-icon';
+        shearsIcon.src = 'assets/shears.svg'; // The reliable file path
+        shearsIcon.alt = 'Shears Icon';
+
+        // Add all the parts to the button
+        button.appendChild(topDiv);
+        button.appendChild(bottomDiv);
+        button.appendChild(shearsIcon);
 
         button.addEventListener('click', () => {
             button.classList.toggle('active');
