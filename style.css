@@ -140,7 +140,7 @@ footer a {
 footer a:hover {
     text-decoration: underline;
 }
-/* Checklist Page Styles */
+/* Checklist Page Styles (V2 - Lush Color Wipe) */
 #action-item-container {
     display: flex;
     flex-direction: column;
@@ -162,41 +162,67 @@ footer a:hover {
     text-align: center;
     cursor: pointer;
     box-shadow: 0 4px 15px var(--shadow-color);
-    /* --- NEW: Define the smooth transition --- */
-    transition: transform 0.1s ease-out, background-color 0.2s ease-out, color 0.2s ease-out, border-color 0.2s ease-out;
-    /* --- NEW: Ensure button content is aligned --- */
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 0.5rem;
+    transition: transform 0.1s ease-out;
+    
+    /* --- NEW: Prepare the button for the animation --- */
+    position: relative;
+    overflow: hidden; /* This is crucial for the wipe effect */
+    z-index: 1; /* Ensures content stays above the wipe */
 }
 
-/* --- NEW: The "press down" effect --- */
+/* --- NEW: The "press down" effect is still here --- */
 .action-item-toggle:active {
     transform: scale(0.97);
 }
 
-.action-item-toggle.active {
-    background-color: #34D399; /* A nice luxury green */
-    color: white;
-    border-color: #34D399;
-    /* --- REMOVED the old transform: scale(1.02) to prevent the "flutter" --- */
+/* --- NEW: The color wipe layer --- */
+.action-item-toggle::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: #34D399; /* Our luxury green */
+    
+    /* Start with the layer hidden to the left */
+    transform: translateX(-101%); 
+    
+    /* Define a smooth, satisfying transition speed */
+    transition: transform 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    z-index: -1;
 }
 
-/* --- NEW: Styles for the checkmark icon --- */
+/* --- NEW: When the button is active, slide the wipe layer into view --- */
+.action-item-toggle.active::before {
+    transform: translateX(0);
+}
+
+/* --- NEW: Make the text and icon change color smoothly --- */
+.action-item-toggle span,
+.action-item-toggle .check-icon {
+    position: relative;
+    transition: color 0.3s ease-out, filter 0.3s ease-out;
+}
+
+.action-item-toggle.active span {
+    color: white;
+}
+
+/* We will keep the checkmark logic from before */
 .check-icon {
     width: 24px;
     height: 24px;
-    opacity: 0; /* Hidden by default */
-    transition: opacity 0.2s ease-out;
-    /* This makes the SVG color white */
+    opacity: 0;
+    transition: opacity 0.2s ease-out 0.1s; /* Add a slight delay */
     filter: invert(1) brightness(2);
 }
 
 .action-item-toggle.active .check-icon {
-    opacity: 1; /* Visible when the button is active */
+    opacity: 1;
 }
 
+/* --- Main Button Styles (Unchanged) --- */
 .button-container {
     max-width: 600px;
     margin: 2rem auto;
