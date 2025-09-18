@@ -15,7 +15,7 @@ async function loadStylistProfiles() {
 
     // Fetch data from the 'Stylists' table
     const { data: stylists, error } = await supabase
-        .from('Stylists')
+        .from('stylists')
         .select('*')
         .order('name'); // Sort them alphabetically
 
