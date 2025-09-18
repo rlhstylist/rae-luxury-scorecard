@@ -287,24 +287,24 @@ footer a:hover {
 With these files created and modified, the Core Scorecard UI is now established. The next steps will involve replacing the mock `kpiData` object with live data by implementing tasks `SC-103` and `SC-104`.
 /* === Integrated Scorecard Styles === */
 
-/* === Refined KPI Header Summary Styles (Forced Layout with !important) === */
+/* === Refined KPI Header Summary Styles (Final Version) === */
 #kpi-summary-container {
-    box-sizing: border-box !important;
-    display: grid !important; /* FORCE GRID LAYOUT */
-    grid-template-columns: 1fr 1fr !important; /* FORCE 2 COLUMNS */
-    width: 100% !important;
-    max-width: 500px !important;
-    margin: 20px auto !important;
-    padding: 0 15px !important;
-    gap: 20px 15px !important;
+    box-sizing: border-box;
+    display: grid;
+    grid-template-columns: 1fr 1fr; /* Two-column layout */
+    width: 100%;
+    max-width: 500px;
+    margin: 20px auto;
+    padding: 0 15px;
+    gap: 20px 15px;
 }
 
 .kpi-card {
-    display: flex !important; /* USE FLEX FOR ALIGNMENT INSIDE THE CARD */
-    flex-direction: column !important;
-    align-items: center !important;
-    justify-content: flex-start !important;
-    text-align: center !important;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    text-align: center;
 }
 
 .kpi-dial-container {
@@ -368,7 +368,7 @@ With these files created and modified, the Core Scorecard UI is now established.
 
 @media (min-width: 601px) {
     #kpi-summary-container {
-        grid-template-columns: 1fr 1fr 1fr 1fr !important; /* FORCE 4 COLUMNS ON DESKTOP */
-        max-width: 900px !important;
+        grid-template-columns: 1fr 1fr 1fr 1fr;
+        max-width: 900px;
     }
 }
