@@ -63,26 +63,24 @@ function initializeDashboard() { const s = getLoggedInStylist(); if (s) { displa
 initializeDashboard();
 // Add this entire block to the end of your existing dashboard.js file
 
-// === Refined KPI Scorecard Logic (Corrected Full Block) ===
+// === Refined KPI Scorecard Logic (Dashboard Version) ===
 
 document.addEventListener('DOMContentLoaded', () => {
-    initializeKpiDials();
+    // This function still runs, but it now creates the simpler dials
+    initializeKpiDials(); 
 });
 
 function initializeKpiDials() {
     const kpiData = {
-        avg_service: { label: "Avg. Service", current: 125, goal: 110, target: 140, format: 'dollar' },
-        avg_retail: { label: "Avg. Retail", current: 42, goal: 50, target: 65, format: 'dollar' },
-        rebook: { label: "Rebook %", current: 85, goal: 80, target: 92, format: 'percent' },
-        productivity: { label: "Productivity %", current: 93, goal: 95, target: 98, format: 'percent' }
+        avg_service: { label: "Avg. Service", current: 125, target: 140, format: 'dollar' },
+        avg_retail: { label: "Avg. Retail", current: 42, target: 65, format: 'dollar' },
+        rebook: { label: "Rebook %", current: 85, target: 92, format: 'percent' },
+        productivity: { label: "Productivity %", current: 93, target: 98, format: 'percent' }
     };
 
     const container = document.getElementById('kpi-summary-container');
-    if (!container) {
-        console.error("KPI container not found!");
-        return;
-    }
-    container.innerHTML = ''; // Clear previous content
+    if (!container) return;
+    container.innerHTML = '';
 
     for (const data of Object.values(kpiData)) {
         container.appendChild(createKpiDial(data));
@@ -91,53 +89,39 @@ function initializeKpiDials() {
 
 function createKpiDial(data) {
     const card = document.createElement('div');
-    card.className = 'kpi-card';
+    card.className = 'kpi-card-summary'; // Using a new class for the 1x4 layout
 
-    // Using innerHTML for the static structure is more reliable
+    // Simplified structure for the dashboard
     card.innerHTML = `
-        <div class="kpi-dial-container">
+        <div class="kpi-dial-container-summary">
             <svg class="kpi-dial-svg" viewBox="0 0 100 100">
                 <circle class="kpi-dial-track" cx="50" cy="50" r="45"></circle>
                 <circle class="kpi-dial-progress" cx="50" cy="50" r="45"></circle>
             </svg>
             <div class="kpi-value-container">
-                <div class="kpi-current-value">0</div>
+                <div class="kpi-current-value-summary">0</div>
             </div>
         </div>
         <div class="kpi-label">${data.label}</div>
-        <div class="kpi-target">TARGET: ${data.format === 'dollar' ? '$' : ''}${data.target}${data.format === 'percent' ? '%' : ''}</div>
     `;
 
-    // --- Dynamic SVG and Animation Logic ---
     const progressCircle = card.querySelector('.kpi-dial-progress');
-    const currentValueEl = card.querySelector('.kpi-current-value');
+    const currentValueEl = card.querySelector('.kpi-current-value-summary');
     
     const radius = 45;
     const circumference = 2 * Math.PI * radius;
-    const arcLength = circumference * (240 / 360); // 240-degree arc
+    const arcLength = circumference * (240 / 360);
     
-    const progressPercentage = Math.min((data.current / data.goal) * 100, 100);
+    // On dashboard, progress is shown relative to the WEEKLY TARGET
+    const progressPercentage = Math.min((data.current / data.target) * 100, 100);
     const offset = arcLength - (progressPercentage / 100) * arcLength;
 
-    // Set track and initial progress attributes
     card.querySelector('.kpi-dial-track').setAttribute('stroke-dasharray', `${arcLength} ${circumference}`);
     progressCircle.setAttribute('stroke-dasharray', `${arcLength} ${circumference}`);
-    progressCircle.setAttribute('stroke-dashoffset', arcLength); // Start empty
+    progressCircle.setAttribute('stroke-dashoffset', arcLength);
 
-    // --- Three-Tier Color Logic ---
-    let dialColorUrl;
-    if (data.current >= data.target) {
-        // Met or exceeded WEEKLY goal
-        dialColorUrl = 'url(#gradient-green)';
-    } else if (data.current >= data.goal) {
-        // Met DAILY goal but not weekly
-        dialColorUrl = 'url(#gradient-gold)';
-    } else {
-        // Not meeting DAILY goal
-        dialColorUrl = 'url(#gradient-red)';
-    }
-    progressCircle.style.stroke = dialColorUrl;
-    // --- End of Color Logic ---
+    // Simplified color logic: Green if you hit target, Gold otherwise.
+    progressCircle.style.stroke = data.current >= data.target ? 'url(#gradient-green)' : 'url(#gradient-gold)';
 
     setTimeout(() => {
         progressCircle.style.strokeDashoffset = offset;
@@ -151,26 +135,15 @@ function animateValue(element, end, duration, format) {
     let start = 0;
     const range = end - start;
     let startTime = null;
-
     function step(timestamp) {
         if (!startTime) startTime = timestamp;
         const progress = Math.min((timestamp - startTime) / duration, 1);
         let currentValue = Math.floor(progress * range + start);
-
-        if (format === 'dollar') {
-            element.textContent = `$${currentValue}`;
-        } else if (format === 'percent') {
-            element.textContent = `${currentValue}%`;
-        } else {
-            element.textContent = currentValue;
-        }
-
-        if (progress < 1) {
-            window.requestAnimationFrame(step);
-        } else {
-            // Ensure final value is exact
-            element.textContent = (format === 'dollar' ? '$' : '') + end + (format === 'percent' ? '%' : '');
-        }
+        if (format === 'dollar') { element.textContent = `$${currentValue}`; } 
+        else if (format === 'percent') { element.textContent = `${currentValue}%`; } 
+        else { element.textContent = currentValue; }
+        if (progress < 1) { window.requestAnimationFrame(step); } 
+        else { element.textContent = (format === 'dollar' ? '$' : '') + end + (format === 'percent' ? '%' : ''); }
     }
     window.requestAnimationFrame(step);
 }

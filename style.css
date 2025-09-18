@@ -237,18 +237,49 @@ footer a:hover {
 .appointment-card.tier-bronze { color: #CD7F32; }
 .appointment-card.tier-sad { color: #888888; }
 
-/* === Refined KPI Header Summary Styles (Final Version) === */
+/* === KPI Dial & Goals Page Styles === */
+
+/* --- Dashboard: 1x4 Summary Dials --- */
 #kpi-summary-container {
-    box-sizing: border-box;
     display: grid;
-    grid-template-columns: 1fr 1fr; /* Two-column layout */
-    width: 100%;
-    max-width: 500px;
+    grid-template-columns: repeat(4, 1fr); /* 4 columns for the 1x4 layout */
+    max-width: 600px; /* Adjust max-width for a sleeker look */
     margin: 20px auto;
-    padding: 0 15px;
-    gap: 20px 15px;
+    padding: 0 10px;
+    gap: 10px;
 }
 
+.kpi-card-summary {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+}
+
+.kpi-dial-container-summary {
+    position: relative;
+    width: 70px; /* Smaller dials for the summary view */
+    height: 70px;
+    margin-bottom: 5px;
+}
+
+.kpi-current-value-summary {
+    color: #1c1c1e;
+    font-size: 1.4em; /* Smaller font for the smaller dial */
+    font-weight: 600;
+}
+
+/* --- Goals Page: Large, Detailed Dials --- */
+#goals-container {
+    display: grid;
+    grid-template-columns: 1fr 1fr; /* 2x2 grid on mobile */
+    gap: 15px;
+    padding: 20px 15px;
+    max-width: 900px;
+    margin: 20px auto;
+}
+
+/* Use the original .kpi-card styles for the goals page */
 .kpi-card {
     display: flex;
     flex-direction: column;
@@ -257,67 +288,77 @@ footer a:hover {
     text-align: center;
 }
 
-.kpi-dial-container {
-    position: relative;
-    width: 100px;
-    height: 100px;
-    margin-bottom: 10px;
-}
-
+/* --- Shared Styles for ALL Dials --- */
 .kpi-dial-svg {
     width: 100%;
     height: 100%;
     transform: rotate(-210deg);
 }
-
 .kpi-dial-track, .kpi-dial-progress {
     fill: none;
     stroke-width: 8;
     stroke-linecap: round;
 }
-
-.kpi-dial-track {
-    stroke: #e0e0e0;
-}
-
+.kpi-dial-track { stroke: #e0e0e0; }
 .kpi-dial-progress {
     stroke: url(#gradient-gold);
     transition: stroke-dashoffset 1.2s cubic-bezier(0.25, 0.8, 0.25, 1);
 }
-
 .kpi-value-container {
     position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
+    top: 0; left: 0; width: 100%; height: 100%;
     display: flex;
     align-items: center;
     justify-content: center;
 }
-
 .kpi-current-value {
     color: #1c1c1e;
     font-size: 1.8em;
     font-weight: 600;
 }
-
 .kpi-label {
     color: #555;
-    font-size: 0.75em;
+    font-size: 0.7em;
     font-weight: 500;
     text-transform: uppercase;
     letter-spacing: 0.5px;
     margin-bottom: 5px;
 }
-
 .kpi-target {
     color: #777;
     font-size: 0.7em;
+    margin-top: 2px;
 }
 
+/* --- New Text and Button Styles --- */
+.appointments-title {
+    font-weight: 400;
+    font-size: 1.1rem;
+    color: var(--text-secondary);
+    margin-top: 2rem;
+}
+.nav-button-bottom {
+    display: block;
+    width: 80%;
+    max-width: 400px;
+    margin: 40px auto 20px; /* More margin on top */
+    padding: 15px;
+    background-color: var(--text-primary);
+    color: #fff;
+    text-align: center;
+    text-decoration: none;
+    border-radius: 12px;
+    font-weight: 500;
+    font-size: 1.1em;
+    transition: background-color 0.2s;
+}
+.nav-button-bottom:hover {
+    background-color: #000;
+}
+
+/* On wider screens, goals page can also be 4-column */
 @media (min-width: 601px) {
-    #kpi-summary-container {
+    #goals-container {
         grid-template-columns: 1fr 1fr 1fr 1fr;
         max-width: 900px;
     }
