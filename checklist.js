@@ -31,25 +31,9 @@ async function loadActionItems() {
         button.className = 'action-item-slice';
         button.dataset.itemId = item.id;
         
-        // --- NEW: Create elements individually for more control ---
-        const topDiv = document.createElement('div');
-        topDiv.className = 'top';
-        topDiv.innerHTML = `<span>${item.title}</span>`;
-
-        const bottomDiv = document.createElement('div');
-        bottomDiv.className = 'bottom';
-        bottomDiv.innerHTML = `<span>${item.title}</span>`;
-
-        // --- NEW: Create the <img> tag for the shears ---
-        const shearsIcon = document.createElement('img');
-        shearsIcon.className = 'shears-icon';
-        shearsIcon.src = 'assets/shears.svg'; // The reliable file path
-        shearsIcon.alt = 'Shears Icon';
-
-        // Add all the parts to the button
-        button.appendChild(topDiv);
-        button.appendChild(bottomDiv);
-        button.appendChild(shearsIcon);
+        // --- THIS IS THE CORRECTED PART ---
+        // We are now creating a simple span, not the complex top/bottom divs.
+        button.innerHTML = `<span>${item.title}</span>`;
 
         button.addEventListener('click', () => {
             button.classList.toggle('active');

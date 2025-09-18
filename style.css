@@ -140,7 +140,7 @@ footer a {
 footer a:hover {
     text-decoration: underline;
 }
-/* Checklist Page Styles (V11 - Final Animation: No Clipping) */
+/* Checklist Page Styles (V12 - Final Animation: The "Slice" - Performant & Reliable) */
 #action-item-container {
     display: flex;
     flex-direction: column;
@@ -161,74 +161,53 @@ footer a:hover {
     background-color: var(--card-background);
     cursor: pointer;
     position: relative;
-    /* FIX: Removed 'overflow: hidden' to allow the icon to be visible */
-    transition: color 0.5s ease, border-color 0.5s ease, background-color 0.5s ease;
+    overflow: hidden; /* Hide the line when it's off-screen */
+    transition: background-color 0.4s ease-out; /* Smooth transition for the active state */
 }
 
-.shears-icon {
-    height: 28px;
-    width: 28px;
-    position: absolute;
-    top: 50%;
-    left: 105%;
-    transform: translateY(-50%) rotate(100deg);
-    transition: transform 0.6s cubic-bezier(0.890, -0.170, 0.140, 1.225), filter 0.5s ease;
-    will-change: transform;
-    z-index: 3; /* Shears are on top */
-    filter: invert(50%); /* Start with a gray color */
-}
-
-/* NEW: Re-introducing the trailing cutline */
+/* We are now only using ONE pseudo-element: the cutline */
 .action-item-slice::after {
     content: '';
-    height: 2px;
-    width: 0;
-    background-color: var(--text-secondary);
     position: absolute;
     top: 50%;
-    right: 0;
-    transform: translateY(-50%);
-    transition: all 0.5s cubic-bezier(0.890, -0.170, 0.140, 1.225);
-    z-index: 2; /* Sits behind the shears */
-}
-
-.action-item-slice.active .shears-icon {
-    transform: translateY(-50%) rotate(45deg) translateX(-250%);
-    filter: brightness(0) invert(1); /* Turns the icon white */
-}
-
-.action-item-slice.active::after {
+    left: 0;
+    height: 2px;
     width: 100%;
-    background-color: white;
+    background-color: var(--text-primary); /* The black cutline */
+    
+    /* FIX: Using transform to prevent 'shake' on mobile. Start off-screen to the right. */
+    transform: translateX(101%);
+    
+    /* This transition is INSTANT when the button becomes inactive */
+    transition: transform 0s; 
 }
 
+/* --- THE ANIMATION --- */
+/* When the button is clicked, animate the line across the screen */
+.action-item-slice.active::after {
+    transform: translateX(-101%);
+    /* A fast, smooth 0.5s animation */
+    transition: transform 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+/* The button's final 'on' state */
+.action-item-slice.active {
+    background-color: #f4f4f0; /* A subtle, luxurious gray highlight */
+    border-color: rgba(0,0,0,0.15);
+}
+
+/* We are no longer using the .top and .bottom elements for an effect */
 .action-item-slice .top,
 .action-item-slice .bottom {
-    position: relative;
-    height: 12px;
-    overflow: hidden;
-    transition: all 0.3s cubic-bezier(1.000, -0.055, 0.025, 1.040);
+   display: none; /* Hide the duplicate text elements */
+}
+/* We need a single span for the text now */
+.action-item-slice span {
+    display: block;
+    text-align: center;
 }
 
-.action-item-slice.active .top,
-.action-item-slice.active .bottom {
-    transition-delay: 0.25s;
-}
-
-.action-item-slice .top { top: 0; transition-delay: 0s; }
-.action-item-slice .bottom { bottom: 0; transition-delay: 0s; }
-.action-item-slice .bottom span { position: absolute; top: -12px; left: 0; width: 100%; }
-
-.action-item-slice.active {
-    color: white;
-    border-color: #34D393;
-    background-color: #34D399;
-}
-
-.action-item-slice.active .top { top: -8px; }
-.action-item-slice.active .bottom { bottom: -8px; }
-
-/* Main Button Styles (Unchanged) */
+/* --- Main Button Styles (Unchanged) --- */
 .button-container, #mark-complete-btn {
     max-width: 600px; margin: 2rem auto; padding: 0 1rem;
 }
