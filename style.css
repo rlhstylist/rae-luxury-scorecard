@@ -161,15 +161,40 @@ footer a:hover {
     padding: 1.5rem;
     text-align: center;
     cursor: pointer;
-    transition: all 0.2s ease-out;
     box-shadow: 0 4px 15px var(--shadow-color);
+    /* --- NEW: Define the smooth transition --- */
+    transition: transform 0.1s ease-out, background-color 0.2s ease-out, color 0.2s ease-out, border-color 0.2s ease-out;
+    /* --- NEW: Ensure button content is aligned --- */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+}
+
+/* --- NEW: The "press down" effect --- */
+.action-item-toggle:active {
+    transform: scale(0.97);
 }
 
 .action-item-toggle.active {
     background-color: #34D399; /* A nice luxury green */
     color: white;
     border-color: #34D399;
-    transform: scale(1.02);
+    /* --- REMOVED the old transform: scale(1.02) to prevent the "flutter" --- */
+}
+
+/* --- NEW: Styles for the checkmark icon --- */
+.check-icon {
+    width: 24px;
+    height: 24px;
+    opacity: 0; /* Hidden by default */
+    transition: opacity 0.2s ease-out;
+    /* This makes the SVG color white */
+    filter: invert(1) brightness(2);
+}
+
+.action-item-toggle.active .check-icon {
+    opacity: 1; /* Visible when the button is active */
 }
 
 .button-container {
