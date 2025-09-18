@@ -287,11 +287,11 @@ footer a:hover {
 With these files created and modified, the Core Scorecard UI is now established. The next steps will involve replacing the mock `kpiData` object with live data by implementing tasks `SC-103` and `SC-104`.
 /* === Integrated Scorecard Styles === */
 
-/* === Refined KPI Header Summary Styles (Corrected Colors & Layout) === */
+/* === Refined KPI Header Summary Styles (Flexbox Layout Fix) === */
 #kpi-summary-container {
-    display: grid;
-    /* Mobile First: 2x2 grid is the default */
-    grid-template-columns: 1fr 1fr; /* Explicitly 2 columns */
+    display: flex; /* USE FLEXBOX */
+    flex-wrap: wrap; /* Allow items to wrap to the next line */
+    justify-content: center; /* Center the items */
     gap: 15px;
     padding: 20px 15px;
     max-width: 900px;
@@ -304,6 +304,8 @@ With these files created and modified, the Core Scorecard UI is now established.
     align-items: center;
     justify-content: flex-start;
     text-align: center;
+    flex: 1 0 40%; /* Grow, don't shrink, and have a base width of 40% */
+    max-width: 150px; /* Prevent cards from becoming too wide */
 }
 
 .kpi-dial-container {
@@ -326,7 +328,7 @@ With these files created and modified, the Core Scorecard UI is now established.
 }
 
 .kpi-dial-track {
-    stroke: #e0e0e0; /* Lighter track for better contrast on light BG */
+    stroke: #e0e0e0;
 }
 
 .kpi-dial-progress {
@@ -345,16 +347,14 @@ With these files created and modified, the Core Scorecard UI is now established.
     justify-content: center;
 }
 
-/* --- COLOR FIX --- */
 .kpi-current-value {
-    color: #1c1c1e; /* Dark color for readability */
+    color: #1c1c1e;
     font-size: 1.8em;
     font-weight: 600;
 }
 
-/* --- COLOR FIX --- */
 .kpi-label {
-    color: #555; /* Darker gray */
+    color: #555;
     font-size: 0.75em;
     font-weight: 500;
     text-transform: uppercase;
@@ -362,17 +362,17 @@ With these files created and modified, the Core Scorecard UI is now established.
     margin-bottom: 5px;
 }
 
-/* --- COLOR FIX --- */
 .kpi-target {
-    color: #777; /* Darker gray */
+    color: #777;
     font-size: 0.7em;
 }
 
-/* Desktop: Switch to a 4-column grid on wider screens */
+/* Desktop: On wider screens, allow 4 items */
 @media (min-width: 601px) {
     #kpi-summary-container {
-        grid-template-columns: repeat(4, 1fr);
-        gap: 10px;
-        padding: 20px 10px;
+        justify-content: space-around;
+    }
+    .kpi-card {
+        flex-basis: 20%; /* Adjust basis for 4 items */
     }
 }
