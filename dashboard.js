@@ -61,3 +61,107 @@ async function loadAppointments(stylist) {
 
 function initializeDashboard() { const s = getLoggedInStylist(); if (s) { displayStylistInfo(s); loadAppointments(s); } }
 initializeDashboard();
+// Add this entire block to the end of your existing dashboard.js file
+
+// === KPI SCORECARD LOGIC ===
+
+// Mock data - we will replace this with live data in the next step
+const kpiData = {
+    reschedule_percent: { value: 85, goal: 80, format: 'percent', label: 'Reschedule' },
+    retail_per_ticket: { value: 42, goal: 35, format: 'dollar', label: 'Retail / Ticket' },
+    new_client_prebook_percent: { value: 92, goal: 90, format: 'percent', label: 'New Client Prebook' },
+    color_add_on_percent: { value: 48, goal: 55, format: 'percent', label: 'Color Add-On' }
+};
+
+// 1. Function to populate the Mini KPI Bar
+function populateMiniBar() {
+    document.getElementById('mini-reschedule').textContent = `${kpiData.reschedule_percent.value}%`;
+    document.getElementById('mini-retail').textContent = `$${kpiData.retail_per_ticket.value}`;
+    document.getElementById('mini-prebook').textContent = `${kpiData.new_client_prebook_percent.value}%`;
+    document.getElementById('mini-addon').textContent = `${kpiData.color_add_on_percent.value}%`;
+}
+
+// 2. Function to create a single enlarged gauge (moved from scorecard.js)
+function createEnlargedGauge(container, kpiName, data) {
+    // Create the HTML structure for a gauge
+    const gaugeHTML = `
+        <div class="kpi-gauge" data-kpi="${kpiName}">
+            <svg class="gauge-svg" viewBox="0 0 100 100"></svg>
+            <div class="gauge-text-container">
+                <div class="gauge-percentage">0</div>
+                <div class="gauge-label">${data.label}</div>
+            </div>
+        </div>
+    `;
+    container.innerHTML += gaugeHTML;
+
+    const gaugeElement = container.querySelector(`[data-kpi="${kpiName}"]`);
+    const svg = gaugeElement.querySelector('.gauge-svg');
+    const percentageText = gaugeElement.querySelector('.gauge-percentage');
+    const radius = 45;
+    const circumference = 2 * Math.PI * radius;
+    const arcLength = circumference * 0.75;
+    
+    // Determine progress relative to the goal
+    const progressValue = Math.min((data.value / data.goal) * 100, 100); // Cap at 100% of goal
+    const offset = arcLength - (progressValue / 100) * arcLength;
+
+    // Set text immediately
+    percentageText.textContent = data.format === 'dollar' ? `$${data.value}` : `${data.value}%`;
+
+    // Draw SVG circles
+    const svgNS = "http://www.w3.org/2000/svg";
+    const track = document.createElementNS(svgNS, "circle");
+    track.setAttribute("cx", "50"); track.setAttribute("cy", "50"); track.setAttribute("r", radius);
+    track.setAttribute("class", "gauge-track");
+    track.setAttribute("stroke-dasharray", `${arcLength} ${circumference}`);
+    svg.appendChild(track);
+
+    const progress = document.createElementNS(svgNS, "circle");
+    progress.setAttribute("cx", "50"); progress.setAttribute("cy", "50"); progress.setAttribute("r", radius);
+    progress.setAttribute("class", "gauge-progress");
+    progress.setAttribute("stroke-dasharray", `${arcLength} ${circumference}`);
+    progress.setAttribute("stroke-dashoffset", arcLength); // Start at 0
+    svg.appendChild(progress);
+
+    // Apply color based on meeting the goal
+    if (data.value >= data.goal) {
+        progress.style.stroke = "#76ff03"; // Green for hit
+    } else {
+        progress.style.stroke = "#f44336"; // Red for miss
+    }
+    
+    // Animate the progress bar
+    setTimeout(() => {
+        progress.style.strokeDashoffset = offset;
+    }, 200);
+}
+
+// 3. Set up the Intersection Observer
+document.addEventListener('DOMContentLoaded', () => {
+    populateMiniBar(); // Populate the mini-bar on page load
+
+    const enlargedContainer = document.getElementById('enlarged-scorecard-container');
+    const trigger = document.getElementById('scorecard-trigger');
+    let hasBeenBuilt = false; // Ensure we only build the gauges once
+
+    const observer = new IntersectionObserver((entries) => {
+        if (entries[0].isIntersecting) {
+            enlargedContainer.classList.add('visible');
+            if (!hasBeenBuilt) {
+                // Create all four gauges
+                for (const [key, value] of Object.entries(kpiData)) {
+                    createEnlargedGauge(enlargedContainer, key, value);
+                }
+                hasBeenBuilt = true;
+            }
+        } else {
+            enlargedContainer.classList.remove('visible');
+        }
+    }, {
+        root: null, // observes intersections relative to the viewport
+        threshold: 0.1 // Triggers when 10% of the element is visible
+    });
+
+    observer.observe(trigger);
+});

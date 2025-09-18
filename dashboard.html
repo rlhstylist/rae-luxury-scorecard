@@ -1,8 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<!-- Add this line to dashboard.html -->
-<a href="scorecard.html" class="nav-button">View My Scorecard</a>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Daily Dashboard - Rae Luxury Hair</title>
@@ -30,5 +28,34 @@
 
     <!-- We'll create this dashboard.js file in a future step -->
     <script type="module" src="dashboard.js" defer></script>
+<!-- Add this to the bottom of dashboard.html -->
+
+<!-- This is the trigger element for our animation -->
+<div id="scorecard-trigger"></div>
+
+<!-- CONTAINER 1: THE STICKY MINI KPI BAR -->
+<div id="kpi-bar-container">
+    <div class="mini-gauge">
+        <span id="mini-reschedule">0%</span>
+        <label>Reschedule</label>
+    </div>
+    <div class="mini-gauge">
+        <span id="mini-retail">$0</span>
+        <label>Retail/T</label>
+    </div>
+    <div class="mini-gauge">
+        <span id="mini-prebook">0%</span>
+        <label>Prebook</label>
+    </div>
+    <div class="mini-gauge">
+        <span id="mini-addon">0%</span>
+        <label>Add-On</label>
+    </div>
+</div>
+
+<!-- CONTAINER 2: THE ENLARGED SCORECARD (Initially Hidden) -->
+<div id="enlarged-scorecard-container">
+    <!-- The full SVG gauges will be generated here by JavaScript -->
+</div>
 </body>
 </html>

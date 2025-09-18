@@ -285,3 +285,104 @@ footer a:hover {
 }```
 
 With these files created and modified, the Core Scorecard UI is now established. The next steps will involve replacing the mock `kpiData` object with live data by implementing tasks `SC-103` and `SC-104`.
+/* === Integrated Scorecard Styles === */
+
+/* The Sticky Mini KPI Bar */
+#kpi-bar-container {
+    position: sticky;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    background-color: #1c1c1e; /* Slightly darker than the main BG */
+    display: flex;
+    justify-content: space-around;
+    padding: 8px 0;
+    border-top: 1px solid #444;
+    z-index: 100;
+}
+
+.mini-gauge {
+    text-align: center;
+    color: #fff;
+}
+
+.mini-gauge span {
+    font-size: 1.4em;
+    font-weight: bold;
+    color: #d4af37; /* Gold */
+}
+
+.mini-gauge label {
+    display: block;
+    font-size: 0.7em;
+    text-transform: uppercase;
+    color: #aaa;
+}
+
+/* The Enlarged Scorecard View */
+#enlarged-scorecard-container {
+    padding: 40px 20px;
+    opacity: 0; /* Hidden by default */
+    transform: translateY(30px); /* Start slightly lower for animation */
+    transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+    pointer-events: none; /* Not interactive when hidden */
+    display: grid;
+    grid-template-columns: 1fr 1fr; /* 2x2 grid */
+    gap: 20px;
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+/* The class we add with JS to show the enlarged view */
+#enlarged-scorecard-container.visible {
+    opacity: 1;
+    transform: translateY(0);
+    pointer-events: auto;
+}
+
+/* This is the invisible trigger element */
+#scorecard-trigger {
+    height: 1px; /* It just needs to exist in the layout */
+    margin-bottom: 150px; /* Give space for the scorecard to animate in */
+}
+
+/* Re-using the gauge styles from before for the enlarged view */
+.kpi-gauge {
+    position: relative;
+    text-align: center;
+    background-color: #2c2c2e;
+    padding: 15px;
+    border-radius: 15px;
+}
+.gauge-svg {
+    width: 100%;
+    max-width: 200px;
+    height: auto;
+    transform: rotate(-135deg);
+}
+.gauge-track, .gauge-progress {
+    fill: none;
+    stroke-width: 12;
+    stroke-linecap: round;
+}
+.gauge-track { stroke: #444; }
+.gauge-progress {
+    stroke: #d4af37;
+    transition: stroke-dashoffset 1s ease-in-out;
+}
+.gauge-text-container {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: #fff;
+}
+.gauge-percentage {
+    font-size: 2.2em;
+    font-weight: bold;
+}
+.gauge-label {
+    font-size: 0.8em;
+    text-transform: uppercase;
+    color: #aaa;
+}
