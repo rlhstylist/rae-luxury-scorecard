@@ -287,15 +287,16 @@ footer a:hover {
 With these files created and modified, the Core Scorecard UI is now established. The next steps will involve replacing the mock `kpiData` object with live data by implementing tasks `SC-103` and `SC-104`.
 /* === Integrated Scorecard Styles === */
 
-/* === Refined KPI Header Summary Styles (Flexbox Layout Fix) === */
+/* === Refined KPI Header Summary Styles (Forced 2x2 Layout) === */
 #kpi-summary-container {
-    display: flex; /* USE FLEXBOX */
-    flex-wrap: wrap; /* Allow items to wrap to the next line */
-    justify-content: center; /* Center the items */
-    gap: 15px;
-    padding: 20px 15px;
-    max-width: 900px;
-    margin: 0 auto;
+    box-sizing: border-box; /* Ensures padding doesn't break the layout */
+    display: grid;
+    grid-template-columns: 1fr 1fr; /* Force a two-column layout */
+    width: 100%; /* Take up the full available width */
+    max-width: 500px; /* But don't get too wide on tablets/desktops */
+    margin: 20px auto; /* Center the container */
+    padding: 0 15px; /* Add padding on the sides */
+    gap: 20px 15px; /* Define row and column gaps */
 }
 
 .kpi-card {
@@ -304,14 +305,12 @@ With these files created and modified, the Core Scorecard UI is now established.
     align-items: center;
     justify-content: flex-start;
     text-align: center;
-    flex: 1 0 40%; /* Grow, don't shrink, and have a base width of 40% */
-    max-width: 150px; /* Prevent cards from becoming too wide */
 }
 
 .kpi-dial-container {
     position: relative;
-    width: 100px;
-    height: 100px;
+    width: 100px; /* Fixed width */
+    height: 100px; /* Fixed height */
     margin-bottom: 10px;
 }
 
@@ -367,12 +366,10 @@ With these files created and modified, the Core Scorecard UI is now established.
     font-size: 0.7em;
 }
 
-/* Desktop: On wider screens, allow 4 items */
+/* On wider screens, create a 4-column layout */
 @media (min-width: 601px) {
     #kpi-summary-container {
-        justify-content: space-around;
-    }
-    .kpi-card {
-        flex-basis: 20%; /* Adjust basis for 4 items */
+        grid-template-columns: 1fr 1fr 1fr 1fr; /* 4 columns */
+        max-width: 900px;
     }
 }
