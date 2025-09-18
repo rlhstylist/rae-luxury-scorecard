@@ -140,18 +140,17 @@ footer a {
 footer a:hover {
     text-decoration: underline;
 }
-/* Checklist Page Styles (V4 - Adapted "Slice" Animation) */
+/* Checklist Page Styles (V5 - Re-integrated "Slice" Animation with Cutline) */
 #action-item-container {
     display: flex;
     flex-direction: column;
-    gap: 1.5rem; /* Increased gap for the new style */
+    gap: 1.5rem;
     max-width: 600px;
     margin: 2rem auto;
     padding: 0 1rem;
 }
 
 .action-item-slice {
-    /* --- Our Core Theme Styles --- */
     font-family: var(--font-family);
     font-size: 1.1rem;
     font-weight: 500;
@@ -162,51 +161,54 @@ footer a:hover {
     background-color: var(--card-background);
     cursor: pointer;
     position: relative;
+    transition: all 1000ms cubic-bezier(0.890, -0.170, 0.140, 1.225);
+}
 
-    /* --- Adapted Transition from your example --- */
+/* --- NEW: Re-integrating the "Cutline" pseudo-element --- */
+.action-item-slice::before {
+    content: '';
+    height: 2px; /* A slightly thicker, more visible line */
+    width: 30px; /* Start with a shorter width */
+    background-color: var(--text-secondary); /* Match the text color initially */
+    position: absolute;
+    top: 50%; /* Center it vertically */
+    right: -40px; /* Start it off-screen */
+    transform: translateY(-50%);
     transition: all 1000ms cubic-bezier(0.890, -0.170, 0.140, 1.225);
 }
 
 .action-item-slice .top,
 .action-item-slice .bottom {
     position: relative;
-    height: 12px; /* Adjusted for our font size */
+    height: 12px;
     overflow: hidden;
     transition: all 300ms cubic-bezier(1.000, -0.055, 0.025, 1.040);
     transition-delay: 0.35s;
 }
 
-.action-item-slice .top {
-    top: 0;
-}
-
-.action-item-slice .bottom {
-    bottom: 0;
-}
-
-/* This positions the duplicate text correctly */
+.action-item-slice .top { top: 0; }
+.action-item-slice .bottom { bottom: 0; }
 .action-item-slice .bottom span {
     position: absolute;
-    top: -12px; /* Must match the height above */
+    top: -12px;
     left: 0;
     width: 100%;
 }
 
-/* --- Replaced :hover with .active to trigger the animation --- */
+/* --- Animation on .active state --- */
 .action-item-slice.active {
     color: white;
-    border-color: #34D399; /* Our luxury green */
+    border-color: #34D399;
     background-color: #34D399;
 }
 
-.action-item-slice.active .top {
-    top: -8px; /* Adjusted for our font size */
-    transition-delay: 0s;
-}
+.action-item-slice.active .top { top: -8px; transition-delay: 0s; }
+.action-item-slice.active .bottom { bottom: -8px; transition-delay: 0s; }
 
-.action-item-slice.active .bottom {
-    bottom: -8px; /* Adjusted for our font size */
-    transition-delay: 0s;
+/* --- NEW: Animate the "Cutline" when the button is active --- */
+.action-item-slice.active::before {
+    width: 130%; /* Have it slice across the entire button */
+    background-color: white; /* Change its color to match the text */
 }
 
 /* --- Main Button Styles (Unchanged) --- */
