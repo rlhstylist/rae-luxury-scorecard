@@ -226,60 +226,54 @@ footer a:hover {
     background-color: #555555;
     cursor: not-allowed;
 }
-/* Tiered Reward Styles for Completed Appointments */
+/* Tiered Reward Styles (V2 - Final Polish) */
 .appointment-card.is-complete {
-    position: relative; /* Needed for the cross-through line */
+    position: relative;
 }
 
-/* The cross-through line */
+/* FIX: The new horizontal, contained cross-through line */
 .appointment-card.is-complete::before {
     content: '';
     position: absolute;
-    top: 50%;
-    left: -5%; /* Start slightly off-screen */
-    width: 110%; /* Extend across the whole card */
+    top: 50%; /* Perfectly centered vertically */
+    left: 1.5rem; /* Aligns with the card's padding */
+    right: 1.5rem; /* Aligns with the card's padding */
     height: 1px;
-    background-color: rgba(0, 0, 0, 0.2);
-    transform: rotate(-5deg); /* A slight, stylish angle */
+    background-color: rgba(0, 0, 0, 0.3);
+    /* We are removing the rotation */
 }
 
 /* The icon for all tiers */
 .appointment-card.is-complete::after {
     content: '';
     position: absolute;
-    top: 10px; /* Position in the top right */
+    top: 10px;
     right: 15px;
     width: 24px;
     height: 24px;
-    background-color: currentColor; /* Inherit the tier color */
+    background-color: currentColor;
     -webkit-mask-size: contain;
     mask-size: contain;
+    -webkit-mask-repeat: no-repeat;
+    mask-repeat: no-repeat;
 }
 
 /* Tier 1: Gold Shears */
 .appointment-card.tier-gold { color: #D4AF37; }
 .appointment-card.tier-gold::after {
-    -webkit-mask-image: url('assets/shears.svg');
-    mask-image: url('assets/shears.svg');
+    /* FIX: New, reliable, high-quality Shears SVG */
+    -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='currentColor'%3E%3Cpath d='M9.25 21.5a.75.75 0 01-.75-.75V18.5h-1a.75.75 0 010-1.5h1V15h-1a.75.75 0 010-1.5h1v-2.25a.75.75 0 011.5 0V17h1a.75.75 0 010 1.5h-1v2.25a.75.75 0 01-.75.75zm3.5-12.75a2.25 2.25 0 100-4.5 2.25 2.25 0 000 4.5zm0-3a.75.75 0 110 1.5.75.75 0 010-1.5zm-3.5 3a2.25 2.25 0 10-4.5 0 2.25 2.25 0 004.5 0zm-3-1.5a.75.75 0 111.5 0 .75.75 0 01-1.5 0zm10.38 3.82a.75.75 0 01.378.96l-3.32 8.298a.75.75 0 11-1.416-.568l3.32-8.298a.75.75 0 011.038-.392zM19.38 5.18a.75.75 0 01.378.96l-8.298 3.32a.75.75 0 01-.96-.378.75.75 0 01.378-.96l8.298-3.32a.75.75 0 01.582-.214z'/%3E%3C/svg%3E");
+    mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='currentColor'%3E%3Cpath d='M9.25 21.5a.75.75 0 01-.75-.75V18.5h-1a.75.75 0 010-1.5h1V15h-1a.75.75 0 010-1.5h1v-2.25a.75.75 0 011.5 0V17h1a.75.75 0 010 1.5h-1v2.25a.75.75 0 01-.75.75zm3.5-12.75a2.25 2.25 0 100-4.5 2.25 2.25 0 000 4.5zm0-3a.75.75 0 110 1.5.75.75 0 010-1.5zm-3.5 3a2.25 2.25 0 10-4.5 0 2.25 2.25 0 004.5 0zm-3-1.5a.75.75 0 111.5 0 .75.75 0 01-1.5 0zm10.38 3.82a.75.75 0 01.378.96l-3.32 8.298a.75.75 0 11-1.416-.568l3.32-8.298a.75.75 0 011.038-.392zM19.38 5.18a.75.75 0 01.378.96l-8.298 3.32a.75.75 0 01-.96-.378.75.75 0 01.378-.96l8.298-3.32a.75.75 0 01.582-.214z'/%3E%3C/svg%3E");
 }
 
 /* Tier 2: Silver Shears */
 .appointment-card.tier-silver { color: #C0C0C0; }
 .appointment-card.tier-silver::after {
-    -webkit-mask-image: url('assets/shears.svg');
-    mask-image: url('assets/shears.svg');
+    -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='currentColor'%3E%3Cpath d='M9.25 21.5a.75.75 0 01-.75-.75V18.5h-1a.75.75 0 010-1.5h1V15h-1a.75.75 0 010-1.5h1v-2.25a.75.75 0 011.5 0V17h1a.75.75 0 010 1.5h-1v2.25a.75.75 0 01-.75.75zm3.5-12.75a2.25 2.25 0 100-4.5 2.25 2.25 0 000 4.5zm0-3a.75.75 0 110 1.5.75.75 0 010-1.5zm-3.5 3a2.25 2.25 0 10-4.5 0 2.25 2.25 0 004.5 0zm-3-1.5a.75.75 0 111.5 0 .75.75 0 01-1.5 0zm10.38 3.82a.75.75 0 01.378.96l-3.32 8.298a.75.75 0 11-1.416-.568l3.32-8.298a.75.75 0 011.038-.392zM19.38 5.18a.75.75 0 01.378.96l-8.298 3.32a.75.75 0 01-.96-.378.75.75 0 01.378-.96l8.298-3.32a.75.75 0 01.582-.214z'/%3E%3C/svg%3E");
+    mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='currentColor'%3E%3Cpath d='M9.25 21.5a.75.75 0 01-.75-.75V18.5h-1a.75.75 0 010-1.5h1V15h-1a.75.75 0 010-1.5h1v-2.25a.75.75 0 011.5 0V17h1a.75.75 0 010 1.5h-1v2.25a.75.75 0 01-.75.75zm3.5-12.75a2.25 2.25 0 100-4.5 2.25 2.25 0 000 4.5zm0-3a.75.75 0 110 1.5.75.75 0 010-1.5zm-3.5 3a2.25 2.25 0 10-4.5 0 2.25 2.25 0 004.5 0zm-3-1.5a.75.75 0 111.5 0 .75.75 0 01-1.5 0zm10.38 3.82a.75.75 0 01.378.96l-3.32 8.298a.75.75 0 11-1.416-.568l3.32-8.298a.75.75 0 011.038-.392zM19.38 5.18a.75.75 0 01.378.96l-8.298 3.32a.75.75 0 01-.96-.378.75.75 0 01.378-.96l8.298-3.32a.75.75 0 01.582-.214z'/%3E%3C/svg%3E");
 }
 
 /* Tier 3: Bronze Shears */
 .appointment-card.tier-bronze { color: #CD7F32; }
 .appointment-card.tier-bronze::after {
-    -webkit-mask-image: url('assets/shears.svg');
-    mask-image: url('assets/shears.svg');
-}
-
-/* Tier 4: Sad Face */
-.appointment-card.tier-sad { color: #888888; }
-.appointment-card.tier-sad::after {
-    -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='currentColor'%3E%3Cpath fill-rule='evenodd' d='M12 2.25c-5.385 0-9.75 4.365-9.75 9.75s4.365 9.75 9.75 9.75 9.75-4.365 9.75-9.75S17.385 2.25 12 2.25zm-2.625 6c-.54 0-.975.435-.975.975s.435.975.975.975 .975-.435.975-.975S9.915 8.25 9.375 8.25zm5.25 0c-.54 0-.975.435-.975.975s.435.975.975.975 .975-.435.975-.975S15.165 8.25 14.625 8.25zm1.94 6.22a.75.75 0 00-1.297-.812 5.25 5.25 0 01-8.506 0 .75.75 0 00-1.297.812A6.75 6.75 0 0012 18.75a6.75 6.75 0 005.565-2.72z' clip-rule='evenodd' /%3E%3C/svg%3E");
-    mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='currentColor'%3E%3Cpath fill-rule='evenodd' d='M12 2.25c-5.385 0-9.75 4.365-9.75 9.75s4.365 9.75 9.75 9.75 9.75-4.365 9.75-9.75S17.385 2.25 12 2.25zm-2.625 6c-.54 0-.975.435-.975.975s.435.975.975.975 .975-.435.975-.975S9.915 8.25 9.375 8.25zm5.25 0c-.54 0-.975.435-.975.975s.435.975.975.975 .975-.435.975-.975S15.165 8.25 14.625 8.25zm1.94 6.22a.75.75 0 00-1.297-.812 5.25 5.25 0 01-8.506 0 .75.75 0 00-1.297.812A6.75 6.75 0 0012 18.75a6.75 6.75 0 005.565-2.72z' clip-rule='evenodd' /%3E%3C/svg%3E");
-}
+    -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='currentColor'%3E%3Cpath d='M9.25 21.5a.75.75 0 01-.75-.75V18.5h-1a.75.75 0 010-1.5h1V15h-1a.75.75 0 010-1.5h1v-2.25a.75.75 0 011.5 0V17h1a.75.75 0 010 1.5h-1v2.25a.75.75 0 01-.75.75zm3.5-12.75a2.25 2.25 0 100-4.5 2.25 2.25 0 000 4.5zm0-3a.7
