@@ -287,30 +287,30 @@ footer a:hover {
 With these files created and modified, the Core Scorecard UI is now established. The next steps will involve replacing the mock `kpiData` object with live data by implementing tasks `SC-103` and `SC-104`.
 /* === Integrated Scorecard Styles === */
 
-/* === Refined KPI Header Summary Styles (Forced 2x2 Layout) === */
+/* === Refined KPI Header Summary Styles (Forced Layout with !important) === */
 #kpi-summary-container {
-    box-sizing: border-box; /* Ensures padding doesn't break the layout */
-    display: grid;
-    grid-template-columns: 1fr 1fr; /* Force a two-column layout */
-    width: 100%; /* Take up the full available width */
-    max-width: 500px; /* But don't get too wide on tablets/desktops */
-    margin: 20px auto; /* Center the container */
-    padding: 0 15px; /* Add padding on the sides */
-    gap: 20px 15px; /* Define row and column gaps */
+    box-sizing: border-box !important;
+    display: grid !important; /* FORCE GRID LAYOUT */
+    grid-template-columns: 1fr 1fr !important; /* FORCE 2 COLUMNS */
+    width: 100% !important;
+    max-width: 500px !important;
+    margin: 20px auto !important;
+    padding: 0 15px !important;
+    gap: 20px 15px !important;
 }
 
 .kpi-card {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: flex-start;
-    text-align: center;
+    display: flex !important; /* USE FLEX FOR ALIGNMENT INSIDE THE CARD */
+    flex-direction: column !important;
+    align-items: center !important;
+    justify-content: flex-start !important;
+    text-align: center !important;
 }
 
 .kpi-dial-container {
     position: relative;
-    width: 100px; /* Fixed width */
-    height: 100px; /* Fixed height */
+    width: 100px;
+    height: 100px;
     margin-bottom: 10px;
 }
 
@@ -366,10 +366,9 @@ With these files created and modified, the Core Scorecard UI is now established.
     font-size: 0.7em;
 }
 
-/* On wider screens, create a 4-column layout */
 @media (min-width: 601px) {
     #kpi-summary-container {
-        grid-template-columns: 1fr 1fr 1fr 1fr; /* 4 columns */
-        max-width: 900px;
+        grid-template-columns: 1fr 1fr 1fr 1fr !important; /* FORCE 4 COLUMNS ON DESKTOP */
+        max-width: 900px !important;
     }
 }
