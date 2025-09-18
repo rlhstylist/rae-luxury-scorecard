@@ -1,4 +1,6 @@
-// dashboard.js (Final Corrected Version)
+// dashboard.js (Final Version with Alert Test)
+
+alert("NEW FILE LOADED!"); // If you see this, the file has been successfully updated.
 
 // --- SUPABASE CLIENT SETUP ---
 const SUPABASE_URL = 'https://wditvvizexcwtkzllltn.supabase.com';
