@@ -5,8 +5,6 @@ const supabaseAnonKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYm
 
 const supabase = createClient(supabaseUrl, supabaseAnonKey);
 
-const supabase = createClient(supabaseUrl, supabaseAnonKey);
-
 const selectedAppointment = JSON.parse(localStorage.getItem('selectedAppointment'));
 if (!selectedAppointment) {
     window.location.href = 'dashboard.html';
