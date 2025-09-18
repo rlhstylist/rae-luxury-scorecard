@@ -140,91 +140,73 @@ footer a {
 footer a:hover {
     text-decoration: underline;
 }
-/* Checklist Page Styles (V3 - Animated Checkmark & "Thunk" Effect) */
+/* Checklist Page Styles (V4 - Adapted "Slice" Animation) */
 #action-item-container {
     display: flex;
     flex-direction: column;
-    gap: 1rem;
+    gap: 1.5rem; /* Increased gap for the new style */
     max-width: 600px;
     margin: 2rem auto;
     padding: 0 1rem;
 }
 
-.action-item-toggle {
+.action-item-slice {
+    /* --- Our Core Theme Styles --- */
     font-family: var(--font-family);
     font-size: 1.1rem;
     font-weight: 500;
+    padding: 1.5rem 2.5rem;
+    border: 2px solid rgba(0,0,0,0.1);
+    border-radius: 12px;
     color: var(--text-secondary);
     background-color: var(--card-background);
-    border: 1px solid rgba(0,0,0,0.1);
-    border-radius: 12px;
-    padding: 1.5rem;
-    text-align: center;
     cursor: pointer;
-    box-shadow: 0 4px 15px var(--shadow-color);
-    transition: transform 0.1s ease-out;
     position: relative;
+
+    /* --- Adapted Transition from your example --- */
+    transition: all 1000ms cubic-bezier(0.890, -0.170, 0.140, 1.225);
+}
+
+.action-item-slice .top,
+.action-item-slice .bottom {
+    position: relative;
+    height: 12px; /* Adjusted for our font size */
     overflow: hidden;
-    z-index: 1;
+    transition: all 300ms cubic-bezier(1.000, -0.055, 0.025, 1.040);
+    transition-delay: 0.35s;
 }
 
-/* --- NEW: Deeper "press down" effect --- */
-.action-item-toggle:active {
-    transform: scale(0.96);
-}
-
-.action-item-toggle::before {
-    content: '';
-    position: absolute;
+.action-item-slice .top {
     top: 0;
+}
+
+.action-item-slice .bottom {
+    bottom: 0;
+}
+
+/* This positions the duplicate text correctly */
+.action-item-slice .bottom span {
+    position: absolute;
+    top: -12px; /* Must match the height above */
     left: 0;
     width: 100%;
-    height: 100%;
+}
+
+/* --- Replaced :hover with .active to trigger the animation --- */
+.action-item-slice.active {
+    color: white;
+    border-color: #34D399; /* Our luxury green */
     background-color: #34D399;
-    transform: translateX(-101%);
-    /* --- NEW: Slower, more deliberate transition for the "thunk" --- */
-    transition: transform 0.4s cubic-bezier(0.23, 1, 0.32, 1);
-    z-index: -1;
 }
 
-.action-item-toggle.active::before {
-    transform: translateX(0);
+.action-item-slice.active .top {
+    top: -8px; /* Adjusted for our font size */
+    transition-delay: 0s;
 }
 
-/* --- NEW: Text now fades out when active --- */
-.action-item-toggle span {
-    transition: opacity 0.2s ease-out;
-}
-.action-item-toggle.active span {
-    opacity: 0;
-}
-
-/* --- NEW: Styles for the animated checkmark --- */
-.check-icon {
-    position: absolute; /* Place it in the center of the button */
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    width: 32px; /* Make it slightly larger */
-    height: 32px;
-    opacity: 0; /* Hidden by default */
-}
-
-.check-icon path {
-    stroke: white; /* Make the checkmark white */
-    stroke-width: 3; /* A nice, bold line */
-    /* This is the magic for the drawing animation */
-    stroke-dasharray: 26;
-    stroke-dashoffset: 26;
-    transition: stroke-dashoffset 0.4s ease-out 0.2s, opacity 0.2s ease-out 0.1s; /* Animate the draw with a delay */
-}
-
-.action-item-toggle.active .check-icon {
-    opacity: 1;
-}
-
-.action-item-toggle.active .check-icon path {
-    stroke-dashoffset: 0; /* This draws the checkmark */
+.action-item-slice.active .bottom {
+    bottom: -8px; /* Adjusted for our font size */
+    transition-delay: 0s;
 }
 
 /* --- Main Button Styles (Unchanged) --- */

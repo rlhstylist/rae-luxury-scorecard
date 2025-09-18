@@ -26,19 +26,17 @@ async function loadActionItems() {
         return;
     }
 
-    // --- NEW: Updated SVG code for the animatable checkmark ---
-    const checkmarkSVG = `
-        <svg class="check-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5" />
-        </svg>
-    `;
-
     for (const item of actionItems) {
         const button = document.createElement('button');
-        button.className = 'action-item-toggle';
+        // --- NEW: The class name is now action-item-slice ---
+        button.className = 'action-item-slice'; 
         button.dataset.itemId = item.id;
         
-        button.innerHTML = `<span>${item.title}</span>` + checkmarkSVG;
+        // --- NEW: Create the required HTML structure for the slicing effect ---
+        button.innerHTML = `
+            <div class="top"><span>${item.title}</span></div>
+            <div class="bottom"><span>${item.title}</span></div>
+        `;
 
         button.addEventListener('click', () => {
             button.classList.toggle('active');
