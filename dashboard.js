@@ -65,103 +65,152 @@ initializeDashboard();
 
 // === KPI SCORECARD LOGIC ===
 
-// Mock data - we will replace this with live data in the next step
-const kpiData = {
-    reschedule_percent: { value: 85, goal: 80, format: 'percent', label: 'Reschedule' },
-    retail_per_ticket: { value: 42, goal: 35, format: 'dollar', label: 'Retail / Ticket' },
-    new_client_prebook_percent: { value: 92, goal: 90, format: 'percent', label: 'New Client Prebook' },
-    color_add_on_percent: { value: 48, goal: 55, format: 'percent', label: 'Color Add-On' }
-};
+// === Refined KPI Scorecard Logic ===
 
-// 1. Function to populate the Mini KPI Bar
-function populateMiniBar() {
-    document.getElementById('mini-reschedule').textContent = `${kpiData.reschedule_percent.value}%`;
-    document.getElementById('mini-retail').textContent = `$${kpiData.retail_per_ticket.value}`;
-    document.getElementById('mini-prebook').textContent = `${kpiData.new_client_prebook_percent.value}%`;
-    document.getElementById('mini-addon').textContent = `${kpiData.color_add_on_percent.value}%`;
+document.addEventListener('DOMContentLoaded', () => {
+    // This is the main function that kicks everything off.
+    initializeKpiDials();
+});
+
+function initializeKpiDials() {
+    // New, correct KPIs with our three required data points.
+    // In the future, this object will be built from Supabase data.
+    const kpiData = {
+        avg_service: {
+            label: "Avg. Service",
+            current: 125,
+            goal: 110,
+            target: 140,
+            format: 'dollar'
+        },
+        avg_retail: {
+            label: "Avg. Retail",
+            current: 42,
+            goal: 50,
+            target: 65,
+            format: 'dollar'
+        },
+        rebook: {
+            label: "Rebook %",
+            current: 85,
+            goal: 80,
+            target: 92,
+            format: 'percent'
+        },
+        productivity: {
+            label: "Productivity %",
+            current: 93,
+            goal: 95,
+            target: 98,
+            format: 'percent'
+        }
+    };
+
+    const container = document.getElementById('kpi-summary-container');
+    container.innerHTML = ''; // Clear any previous content
+
+    // Create a dial for each KPI in our data
+    for (const [key, value] of Object.entries(kpiData)) {
+        createKpiDial(container, value);
+    }
 }
 
-// 2. Function to create a single enlarged gauge (moved from scorecard.js)
-function createEnlargedGauge(container, kpiName, data) {
-    // Create the HTML structure for a gauge
-    const gaugeHTML = `
-        <div class="kpi-gauge" data-kpi="${kpiName}">
-            <svg class="gauge-svg" viewBox="0 0 100 100"></svg>
-            <div class="gauge-text-container">
-                <div class="gauge-percentage">0</div>
-                <div class="gauge-label">${data.label}</div>
-            </div>
-        </div>
-    `;
-    container.innerHTML += gaugeHTML;
+function createKpiDial(container, data) {
+    // 1. Create the card structure
+    const card = document.createElement('div');
+    card.className = 'kpi-card';
 
-    const gaugeElement = container.querySelector(`[data-kpi="${kpiName}"]`);
-    const svg = gaugeElement.querySelector('.gauge-svg');
-    const percentageText = gaugeElement.querySelector('.gauge-percentage');
+    const dialContainer = document.createElement('div');
+    dialContainer.className = 'kpi-dial-container';
+
+    const svg = document.createElementNS("http://www.w.org/2000/svg", "svg");
+    svg.setAttribute('class', 'kpi-dial-svg');
+    svg.setAttribute('viewBox', '0 0 100 100');
+
+    const valueContainer = document.createElement('div');
+    valueContainer.className = 'kpi-value-container';
+    
+    const currentValueEl = document.createElement('div');
+    currentValueEl.className = 'kpi-current-value';
+    currentValueEl.textContent = '0'; // Start at 0 for animation
+
+    const labelEl = document.createElement('div');
+    labelEl.className = 'kpi-label';
+    labelEl.textContent = data.label;
+
+    const targetEl = document.createElement('div');
+    targetEl.className = 'kpi-target';
+    targetEl.textContent = `TARGET: ${data.format === 'dollar' ? '$' : ''}${data.target}${data.format === 'percent' ? '%' : ''}`;
+
+    // Assemble the card
+    valueContainer.appendChild(currentValueEl);
+    dialContainer.appendChild(svg);
+    dialContainer.appendChild(valueContainer);
+    card.appendChild(dialContainer);
+    card.appendChild(labelEl);
+    card.appendChild(targetEl);
+    container.appendChild(card);
+
+    // 2. SVG Dial Logic
     const radius = 45;
     const circumference = 2 * Math.PI * radius;
-    const arcLength = circumference * 0.75;
+    // We use a 240-degree arc (66.6% of the circle) for a more refined look
+    const arcLength = circumference * (240 / 360);
+
+    const progressPercentage = Math.min((data.current / data.goal) * 100, 100);
+    const offset = arcLength - (progressPercentage / 100) * arcLength;
+
+    // Create track and progress circles
+    const track = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+    track.setAttribute('class', 'kpi-dial-track');
+    track.setAttribute('cx', '50'); track.setAttribute('cy', '50'); track.setAttribute('r', radius);
+    track.setAttribute('stroke-dasharray', `${arcLength} ${circumference}`);
     
-    // Determine progress relative to the goal
-    const progressValue = Math.min((data.value / data.goal) * 100, 100); // Cap at 100% of goal
-    const offset = arcLength - (progressValue / 100) * arcLength;
+    const progress = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+    progress.setAttribute('class', 'kpi-dial-progress');
+    progress.setAttribute('cx', '50'); progress.setAttribute('cy', '50'); progress.setAttribute('r', radius);
+    progress.setAttribute('stroke-dasharray', `${arcLength} ${circumference}`);
+    progress.setAttribute('stroke-dashoffset', arcLength); // Start empty
 
-    // Set text immediately
-    percentageText.textContent = data.format === 'dollar' ? `$${data.value}` : `${data.value}%`;
+    // Check if goal is met for coloring
+    if (data.current >= data.goal) {
+        progress.style.stroke = 'url(#gradient-green)';
+    }
 
-    // Draw SVG circles
-    const svgNS = "http://www.w3.org/2000/svg";
-    const track = document.createElementNS(svgNS, "circle");
-    track.setAttribute("cx", "50"); track.setAttribute("cy", "50"); track.setAttribute("r", radius);
-    track.setAttribute("class", "gauge-track");
-    track.setAttribute("stroke-dasharray", `${arcLength} ${circumference}`);
     svg.appendChild(track);
-
-    const progress = document.createElementNS(svgNS, "circle");
-    progress.setAttribute("cx", "50"); progress.setAttribute("cy", "50"); progress.setAttribute("r", radius);
-    progress.setAttribute("class", "gauge-progress");
-    progress.setAttribute("stroke-dasharray", `${arcLength} ${circumference}`);
-    progress.setAttribute("stroke-dashoffset", arcLength); // Start at 0
     svg.appendChild(progress);
 
-    // Apply color based on meeting the goal
-    if (data.value >= data.goal) {
-        progress.style.stroke = "#76ff03"; // Green for hit
-    } else {
-        progress.style.stroke = "#f44336"; // Red for miss
-    }
-    
-    // Animate the progress bar
+    // 3. Animation Logic
     setTimeout(() => {
+        // Animate the dial
         progress.style.strokeDashoffset = offset;
-    }, 200);
+        
+        // Animate the number count-up
+        animateValue(currentValueEl, data.current, 1200, data.format);
+    }, 500); // Small delay to ensure it animates on load
 }
 
-// 3. Set up the Intersection Observer
-document.addEventListener('DOMContentLoaded', () => {
-    populateMiniBar(); // Populate the mini-bar on page load
+function animateValue(element, end, duration, format) {
+    let start = 0;
+    const range = end - start;
+    let startTime = null;
 
-    const enlargedContainer = document.getElementById('enlarged-scorecard-container');
-    const trigger = document.getElementById('scorecard-trigger');
-    let hasBeenBuilt = false; // Ensure we only build the gauges once
+    function step(timestamp) {
+        if (!startTime) startTime = timestamp;
+        const progress = Math.min((timestamp - startTime) / duration, 1);
+        let currentValue = Math.floor(progress * range + start);
 
-    const observer = new IntersectionObserver((entries) => {
-        if (entries[0].isIntersecting) {
-            enlargedContainer.classList.add('visible');
-            if (!hasBeenBuilt) {
-                // Create all four gauges
-                for (const [key, value] of Object.entries(kpiData)) {
-                    createEnlargedGauge(enlargedContainer, key, value);
-                }
-                hasBeenBuilt = true;
-            }
+        if (format === 'dollar') {
+            element.textContent = `$${currentValue}`;
+        } else if (format === 'percent') {
+            element.textContent = `${currentValue}%`;
         } else {
-            enlargedContainer.classList.remove('visible');
+            element.textContent = currentValue;
         }
-    }, {
-        root: null, // observes intersections relative to the viewport
-        threshold: 0.1 // Triggers when 10% of the element is visible
-    });
 
-    observer.observe(trigger);
-});
+        if (progress < 1) {
+            window.requestAnimationFrame(step);
+        }
+    }
+    window.requestAnimationFrame(step);
+}
