@@ -1,14 +1,8 @@
-// dashboard.js (Complete and Corrected File)
+// dashboard.js (Final Corrected Version)
 
 // --- SUPABASE CLIENT SETUP ---
-// NOTE: Replace with your actual Supabase URL and Key
-const SUPABASE_URL = 'https://wditvvizexcwtkzllltn.supabase.com
-';
-const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6IndkaXR2dml6ZXhjd3RremxsbHRuIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTgxNDc4ODUsImV4cCI6MjA3MzcyMzg4NX0.6snZfp6_ktod8lS-AgYJlkPI397OmOCtgG06fmO816I
-';
-const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
-
-// This is the corrected line that fixes the syntax error
+const SUPABASE_URL = 'https://wditvvizexcwtkzllltn.supabase.com';
+const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6IndkaXR2dml6ZXhjd3RremxsbHRuIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTgxNDc4ODUsImV4cCI6MjA3MzcyMzg4NX0.6snZfp6_ktod8lS-AgYJlkPI397OmOCtgG06fmO816I';
 const client = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
 // --- CORE FUNCTIONS ---
@@ -24,7 +18,6 @@ async function displayAppointments(stylistId) {
     const appointmentList = document.getElementById('appointment-list');
     appointmentList.innerHTML = '<div class="loading-spinner"></div>';
 
-    // Use the 'client' variable
     const { data, error } = await client
         .from('appointments')
         .select('*')
@@ -70,7 +63,7 @@ function initializeDashboard() {
     initializeKpiDials();
 }
 
-// --- KPI DIAL LOGIC (Unchanged) ---
+// --- KPI DIAL LOGIC ---
 
 function initializeKpiDials() {
     const kpiData = {
