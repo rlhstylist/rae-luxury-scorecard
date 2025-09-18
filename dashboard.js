@@ -8,12 +8,11 @@ const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZ
 ';
 const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-// CORRECTED INITIALIZATION: The global 'supabase' object from the CDN script is used to create our client.
-const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+// This is the corrected line that fixes the syntax error
+const client = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
 // --- CORE FUNCTIONS ---
 
-// Displays the logged-in stylist's name.
 function displayStylistInfo(stylist) {
     const stylistNameEl = document.getElementById('stylist-name');
     if (stylistNameEl) {
@@ -21,13 +20,12 @@ function displayStylistInfo(stylist) {
     }
 }
 
-// Fetches and displays appointments for the logged-in stylist.
 async function displayAppointments(stylistId) {
     const appointmentList = document.getElementById('appointment-list');
     appointmentList.innerHTML = '<div class="loading-spinner"></div>';
 
-    // Use the correctly initialized supabaseClient
-    const { data, error } = await supabaseClient
+    // Use the 'client' variable
+    const { data, error } = await client
         .from('appointments')
         .select('*')
         .eq('stylist_id', stylistId)
@@ -61,7 +59,6 @@ async function displayAppointments(stylistId) {
     }
 }
 
-// Main function to initialize the dashboard.
 function initializeDashboard() {
     const loggedInStylist = JSON.parse(localStorage.getItem('loggedInStylist'));
     if (!loggedInStylist) {
@@ -73,7 +70,7 @@ function initializeDashboard() {
     initializeKpiDials();
 }
 
-// --- KPI DIAL LOGIC ---
+// --- KPI DIAL LOGIC (Unchanged) ---
 
 function initializeKpiDials() {
     const kpiData = {
@@ -142,9 +139,7 @@ function animateValue(element, end, duration, format) {
 }
 
 // --- EVENT LISTENERS ---
-
 document.addEventListener('DOMContentLoaded', initializeDashboard);
-
 document.getElementById('logout-link').addEventListener('click', (e) => {
     e.preventDefault();
     localStorage.removeItem('loggedInStylist');
