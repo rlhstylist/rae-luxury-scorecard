@@ -221,3 +221,65 @@ footer a:hover {
     transition: background-color 0.2s;
 }
 #mark-complete-btn:hover { background-color: #000000; }
+/* Style for the "Mark Complete" button when it's disabled */
+#mark-complete-btn:disabled {
+    background-color: #555555;
+    cursor: not-allowed;
+}
+/* Tiered Reward Styles for Completed Appointments */
+.appointment-card.is-complete {
+    position: relative; /* Needed for the cross-through line */
+}
+
+/* The cross-through line */
+.appointment-card.is-complete::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: -5%; /* Start slightly off-screen */
+    width: 110%; /* Extend across the whole card */
+    height: 1px;
+    background-color: rgba(0, 0, 0, 0.2);
+    transform: rotate(-5deg); /* A slight, stylish angle */
+}
+
+/* The icon for all tiers */
+.appointment-card.is-complete::after {
+    content: '';
+    position: absolute;
+    top: 10px; /* Position in the top right */
+    right: 15px;
+    width: 24px;
+    height: 24px;
+    background-color: currentColor; /* Inherit the tier color */
+    -webkit-mask-size: contain;
+    mask-size: contain;
+}
+
+/* Tier 1: Gold Shears */
+.appointment-card.tier-gold { color: #D4AF37; }
+.appointment-card.tier-gold::after {
+    -webkit-mask-image: url('assets/shears.svg');
+    mask-image: url('assets/shears.svg');
+}
+
+/* Tier 2: Silver Shears */
+.appointment-card.tier-silver { color: #C0C0C0; }
+.appointment-card.tier-silver::after {
+    -webkit-mask-image: url('assets/shears.svg');
+    mask-image: url('assets/shears.svg');
+}
+
+/* Tier 3: Bronze Shears */
+.appointment-card.tier-bronze { color: #CD7F32; }
+.appointment-card.tier-bronze::after {
+    -webkit-mask-image: url('assets/shears.svg');
+    mask-image: url('assets/shears.svg');
+}
+
+/* Tier 4: Sad Face */
+.appointment-card.tier-sad { color: #888888; }
+.appointment-card.tier-sad::after {
+    -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='currentColor'%3E%3Cpath fill-rule='evenodd' d='M12 2.25c-5.385 0-9.75 4.365-9.75 9.75s4.365 9.75 9.75 9.75 9.75-4.365 9.75-9.75S17.385 2.25 12 2.25zm-2.625 6c-.54 0-.975.435-.975.975s.435.975.975.975 .975-.435.975-.975S9.915 8.25 9.375 8.25zm5.25 0c-.54 0-.975.435-.975.975s.435.975.975.975 .975-.435.975-.975S15.165 8.25 14.625 8.25zm1.94 6.22a.75.75 0 00-1.297-.812 5.25 5.25 0 01-8.506 0 .75.75 0 00-1.297.812A6.75 6.75 0 0012 18.75a6.75 6.75 0 005.565-2.72z' clip-rule='evenodd' /%3E%3C/svg%3E");
+    mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='currentColor'%3E%3Cpath fill-rule='evenodd' d='M12 2.25c-5.385 0-9.75 4.365-9.75 9.75s4.365 9.75 9.75 9.75 9.75-4.365 9.75-9.75S17.385 2.25 12 2.25zm-2.625 6c-.54 0-.975.435-.975.975s.435.975.975.975 .975-.435.975-.975S9.915 8.25 9.375 8.25zm5.25 0c-.54 0-.975.435-.975.975s.435.975.975.975 .975-.435.975-.975S15.165 8.25 14.625 8.25zm1.94 6.22a.75.75 0 00-1.297-.812 5.25 5.25 0 01-8.506 0 .75.75 0 00-1.297.812A6.75 6.75 0 0012 18.75a6.75 6.75 0 005.565-2.72z' clip-rule='evenodd' /%3E%3C/svg%3E");
+}

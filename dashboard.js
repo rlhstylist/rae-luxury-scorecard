@@ -5,95 +5,69 @@ const supabaseAnonKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYm
 
 const supabase = createClient(supabaseUrl, supabaseAnonKey);
 
-function getLoggedInStylist() {
-    const stylistData = localStorage.getItem('selectedStylist');
-    if (!stylistData) {
-        window.location.href = 'index.html';
-        return null;
-    }
-    return JSON.parse(stylistData);
-}
-
-function displayStylistInfo(stylist) {
-    document.getElementById('stylist-name-header').textContent = `Welcome, ${stylist.name}`;
-}
-
-// NEW FUNCTION: Group appointments by client name
-function groupAppointments(appointments) {
-    const grouped = {};
-    for (const appt of appointments) {
-        if (!grouped[appt.client_name]) {
-            // First time we see this client, create a new entry
-            grouped[appt.client_name] = {
-                ...appt, // Copy all appointment details
-                services: [appt.service_description], // Start a list of services
-                earliest_time: appt.appointment_time // Set the earliest time
-            };
-        } else {
-            // We've seen this client before, just add the new service
-            grouped[appt.client_name].services.push(appt.service_description);
-        }
-    }
-    // Return an array of the grouped appointments
-    return Object.values(grouped);
-}
+// ... (keep getLoggedInStylist, displayStylistInfo, groupAppointments functions as they are) ...
 
 async function loadAppointments(stylist) {
     const appointmentList = document.getElementById('appointment-list');
     appointmentList.innerHTML = '';
 
-    const { data: appointments, error } = await supabase
-        .from('appointments')
-        .select('*')
-        .eq('stylist_id', stylist.id)
-        .order('appointment_time');
+    // NEW: Fetch completion counts for each appointment
+    const { data: completedData, error: completedError } = await supabase
+        .from('appointmentactions')
+        .select('appointment_id, is_completed, total_actions_available')
+        .eq('stylist_id', stylist.id);
 
-    if (error) {
-        console.error('Error fetching appointments:', error);
-        appointmentList.innerHTML = '<p>Could not load appointments.</p>';
-        return;
+    if (completedError) { console.error(completedError); }
+
+    // NEW: Process the data into a simple map { appointment_id: count }
+    const completionCounts = {};
+    for (const record of completedData) {
+        if (!completionCounts[record.appointment_id]) {
+            completionCounts[record.appointment_id] = { completed: 0, total: record.total_actions_available };
+        }
+        if (record.is_completed) {
+            completionCounts[record.appointment_id].completed++;
+        }
     }
 
-    if (appointments.length === 0) {
-        appointmentList.innerHTML = '<p>You have no appointments scheduled for today.</p>';
-        return;
-    }
+    const { data: appointments, error } = await supabase.from('appointments').select('*').eq('stylist_id', stylist.id).order('appointment_time');
+    
+    // ... (error handling) ...
 
-    // Group the appointments before displaying them
     const groupedAppointments = groupAppointments(appointments);
 
     for (const appt of groupedAppointments) {
         const card = document.createElement('div');
         card.className = 'appointment-card';
-        card.style.cursor = 'pointer';
+        
+        // NEW: Check for completion status and apply the correct tier
+        if (completionCounts[appt.id]) {
+            const count = completionCounts[appt.id];
+            const missed = count.total - count.completed;
+            
+            card.classList.add('is-complete'); // Add the base class for the cross-through line
+            
+            if (missed === 0) {
+                card.classList.add('tier-gold'); // 100% completion
+            } else if (missed === 1) {
+                card.classList.add('tier-silver'); // 1 item missed
+            } else if (missed === 2) {
+                card.classList.add('tier-bronze'); // 2 items missed
+            } else {
+                card.classList.add('tier-sad'); // 3+ items missed
+            }
 
-        card.addEventListener('click', () => {
-            localStorage.setItem('selectedAppointment', JSON.stringify(appt));
-            window.location.href = 'checklist.html';
-        });
+            card.style.cursor = 'default';
+        } else {
+            card.style.cursor = 'pointer';
+            card.addEventListener('click', () => {
+                localStorage.setItem('selectedAppointment', JSON.stringify(appt));
+                window.location.href = 'checklist.html';
+            });
+        }
 
-        const time = new Date(appt.earliest_time).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-
-        // Join all services with a line break
-        const servicesHtml = appt.services.join('<br>');
-
-        card.innerHTML = `
-            <div class="appointment-time">${time}</div>
-            <div class="appointment-details">
-                <h3>${appt.client_name}</h3>
-                <p>${servicesHtml}</p>
-            </div>
-        `;
-        appointmentList.appendChild(card);
+        // ... (rest of the card creation code remains the same) ...
     }
 }
 
-function initializeDashboard() {
-    const stylist = getLoggedInStylist();
-    if (stylist) {
-        displayStylistInfo(stylist);
-        loadAppointments(stylist);
-    }
-}
-
-initializeDashboard();
+// ... (keep initializeDashboard function as it is) ...
