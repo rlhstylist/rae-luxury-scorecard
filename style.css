@@ -140,7 +140,7 @@ footer a {
 footer a:hover {
     text-decoration: underline;
 }
-/* Checklist Page Styles (V10 - Final Animation: No Shake, Reliable Icon) */
+/* Checklist Page Styles (V11 - Final Animation: No Clipping) */
 #action-item-container {
     display: flex;
     flex-direction: column;
@@ -161,31 +161,45 @@ footer a:hover {
     background-color: var(--card-background);
     cursor: pointer;
     position: relative;
-    overflow: hidden; /* Keep the overflow hidden */
+    /* FIX: Removed 'overflow: hidden' to allow the icon to be visible */
     transition: color 0.5s ease, border-color 0.5s ease, background-color 0.5s ease;
 }
 
-/* --- NEW: Styling the <img> tag directly --- */
 .shears-icon {
     height: 28px;
     width: 28px;
     position: absolute;
     top: 50%;
-    left: 105%; /* Start just off-screen to the right */
-    
-    /* --- FIX: Use transform for smooth, hardware-accelerated animation --- */
+    left: 105%;
     transform: translateY(-50%) rotate(100deg);
     transition: transform 0.6s cubic-bezier(0.890, -0.170, 0.140, 1.225), filter 0.5s ease;
-    
-    /* A hint to the browser to optimize this element for animation */
     will-change: transform;
+    z-index: 3; /* Shears are on top */
+    filter: invert(50%); /* Start with a gray color */
+}
+
+/* NEW: Re-introducing the trailing cutline */
+.action-item-slice::after {
+    content: '';
+    height: 2px;
+    width: 0;
+    background-color: var(--text-secondary);
+    position: absolute;
+    top: 50%;
+    right: 0;
+    transform: translateY(-50%);
+    transition: all 0.5s cubic-bezier(0.890, -0.170, 0.140, 1.225);
+    z-index: 2; /* Sits behind the shears */
 }
 
 .action-item-slice.active .shears-icon {
-    /* --- Animate the icon across the entire button --- */
     transform: translateY(-50%) rotate(45deg) translateX(-250%);
-    /* --- This will turn the black SVG white when active --- */
-    filter: brightness(0) invert(1);
+    filter: brightness(0) invert(1); /* Turns the icon white */
+}
+
+.action-item-slice.active::after {
+    width: 100%;
+    background-color: white;
 }
 
 .action-item-slice .top,
@@ -214,7 +228,7 @@ footer a:hover {
 .action-item-slice.active .top { top: -8px; }
 .action-item-slice.active .bottom { bottom: -8px; }
 
-/* --- Main Button Styles (Unchanged) --- */
+/* Main Button Styles (Unchanged) */
 .button-container, #mark-complete-btn {
     max-width: 600px; margin: 2rem auto; padding: 0 1rem;
 }
