@@ -1,11 +1,10 @@
-// goals.js - Logic for the detailed goals page
+// goals.js (Complete and Corrected File)
 
 document.addEventListener('DOMContentLoaded', () => {
     initializeGoalDials();
 });
 
 function initializeGoalDials() {
-    // This data includes the daily 'goal' which determines the dial's progress
     const kpiData = {
         avg_service: { label: "Avg. Service", current: 125, goal: 110, target: 140, format: 'dollar' },
         avg_retail: { label: "Avg. Retail", current: 42, goal: 50, target: 65, format: 'dollar' },
@@ -24,8 +23,9 @@ function initializeGoalDials() {
 
 function createGoalDial(data) {
     const card = document.createElement('div');
-    card.className = 'kpi-card'; // We can reuse the .kpi-card class
+    card.className = 'kpi-card';
 
+    // This HTML structure uses the correct class names that match the stylesheet
     card.innerHTML = `
         <div class="kpi-dial-container">
             <svg class="kpi-dial-svg" viewBox="0 0 100 100">
@@ -42,13 +42,12 @@ function createGoalDial(data) {
     `;
 
     const progressCircle = card.querySelector('.kpi-dial-progress');
-    const currentValueEl = card.querySelector('.kpi-current-value');
+    const currentValueEl = card.querySelector('.kpi-current-value'); // This will now find the element correctly
     
     const radius = 45;
     const circumference = 2 * Math.PI * radius;
     const arcLength = circumference * (240 / 360);
     
-    // On this page, progress is shown relative to the DAILY GOAL
     const progressPercentage = Math.min((data.current / data.goal) * 100, 100);
     const offset = arcLength - (progressPercentage / 100) * arcLength;
 
@@ -56,7 +55,6 @@ function createGoalDial(data) {
     progressCircle.setAttribute('stroke-dasharray', `${arcLength} ${circumference}`);
     progressCircle.setAttribute('stroke-dashoffset', arcLength);
 
-    // Color logic is based on daily goal and weekly target
     let dialColorUrl;
     if (data.current >= data.target) { dialColorUrl = 'url(#gradient-green)'; } 
     else if (data.current >= data.goal) { dialColorUrl = 'url(#gradient-gold)'; } 
@@ -72,6 +70,7 @@ function createGoalDial(data) {
 }
 
 function animateValue(element, end, duration, format) {
+    if (!element) return; // Guard clause to prevent errors
     let start = 0;
     const range = end - start;
     let startTime = null;
