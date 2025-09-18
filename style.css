@@ -140,7 +140,7 @@ footer a {
 footer a:hover {
     text-decoration: underline;
 }
-/* Checklist Page Styles (V7 - Custom Shears & Synchronized Animation) */
+/* Checklist Page Styles (V8 - Corrected Icon & Precise Timing) */
 #action-item-container {
     display: flex;
     flex-direction: column;
@@ -161,43 +161,40 @@ footer a:hover {
     background-color: var(--card-background);
     cursor: pointer;
     position: relative;
-    /* This transition is for the color change */
-    transition: all 1000ms cubic-bezier(0.890, -0.170, 0.140, 1.225);
+    transition: all 0.5s cubic-bezier(0.890, -0.170, 0.140, 1.225);
 }
 
-/* --- NEW: The ::before element is now your custom shears icon --- */
+/* --- NEW: Simplified, reliable SVG icon using currentColor --- */
 .action-item-slice::before {
     content: '';
-    height: 28px; /* Scaled for optimal aesthetics */
+    height: 28px;
     width: 28px;
     position: absolute;
     top: 50%;
-    right: -40px; /* Start off-screen */
-    transform: translateY(-50%) rotate(90deg); /* Rotated to face left */
-    transition: all 1000ms cubic-bezier(0.890, -0.170, 0.140, 1.225);
-    z-index: 3; /* Shears are on top of the cutline */
+    right: -40px;
+    transform: translateY(-50%) rotate(100deg);
+    /* The animation for the shears themselves */
+    transition: all 0.5s cubic-bezier(0.890, -0.170, 0.140, 1.225);
+    z-index: 3;
     
-    /* This is your custom shears image, converted to an efficient SVG data URI */
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='currentColor'%3E%3Cpath d='M10.213 9.795l-3.33-3.33a2.5 2.5 0 10-1.414 1.414l3.33 3.33-3.018 3.018a2.5 2.5 0 101.414 1.414l3.018-3.018 3.165 3.165a2.5 2.5 0 101.414-1.414L11.627 9.795zm.707-.707l3.473-3.473a2.5 2.5 0 10-1.414-1.414L9.505 7.675 10.92 9.09z'/%3E%3C/svg%3E");
-    background-color: var(--text-secondary); /* Color of the shears */
-    -webkit-mask-image: var(--svg);
-    mask-image: var(--svg);
-    -webkit-mask-size: contain;
+    /* This is the new, corrected SVG icon */
+    background-color: currentColor; /* Inherits the button's text color */
+    -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Cpath d='M329.8 217.3c-2.4-2.4-5.5-3.6-8.5-3.6s-6.1 1.2-8.5 3.6L208 322.1l-61.1-61.1c-4.7-4.7-12.3-4.7-17 0l-17 17c-4.7 4.7-4.7 12.3 0 17l86.6 86.6c4.7 4.7 12.3 4.7 17 0l114.8-114.8c4.7-4.7 4.7-12.3 0-17l-17-17z'/%3E%3Cpath d='M206.8 68.2c-2.4-2.4-5.5-3.6-8.5-3.6s-6.1 1.2-8.5 3.6L85 173.1c-4.7 4.7-4.7 12.3 0 17l17 17c4.7 4.7 12.3 4.7 17 0l104.8-104.8c4.7-4.7 4.7-12.3 0-17l-17-17zM151.2 443.8c-2.4-2.4-5.5-3.6-8.5-3.6s-6.1 1.2-8.5 3.6L29.4 338.9c-4.7 4.7-4.7 12.3 0 17l17 17c4.7 4.7 12.3 4.7 17 0l104.8-104.8c4.7-4.7 4.7-12.3 0-17l-17-17z'/%3E%3Cpath d='M443.8 151.2c-2.4-2.4-5.5-3.6-8.5-3.6s-6.1 1.2-8.5 3.6L322.1 256l-61.1-61.1c-4.7-4.7-12.3-4.7-17 0l-17 17c-4.7 4.7-4.7 12.3 0 17l86.6 86.6c4.7 4.7 12.3 4.7 17 0l114.8-114.8c4.7-4.7 4.7-12.3 0-17l-17-17z'/%3E%3C/svg%3E");
+    mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 384 512'%3E%3Cpath d='M352 128C369.7 128 384 113.7 384 96C384 78.33 369.7 64 352 64H224V32C224 14.33 209.7 0 192 0C174.3 0 160 14.33 160 32V64H32C14.33 64 0 78.33 0 96C0 113.7 14.33 128 32 128H102.8L153.2 344.3L32 448C14.33 448 0 462.3 0 480C0 497.7 14.33 512 32 512H160V480C160 462.3 174.3 448 192 448C209.7 448 224 462.3 224 480V512H352C369.7 512 384 497.7 384 480C384 462.3 369.7 448 352 448H281.2L230.8 288.5L352 128Z'/%3E%3C/svg%3E");
     mask-size: contain;
 }
 
-/* --- NEW: The ::after element is the trailing cutline --- */
 .action-item-slice::after {
     content: '';
     height: 2px;
-    width: 0; /* Starts with no width */
-    background-color: var(--text-secondary);
+    width: 0;
+    background-color: currentColor; /* Inherits the button's text color */
     position: absolute;
     top: 50%;
     right: 0;
     transform: translateY(-50%);
-    transition: all 1000ms cubic-bezier(0.890, -0.170, 0.140, 1.225);
-    z-index: 2; /* Sits behind the shears */
+    transition: all 0.5s cubic-bezier(0.890, -0.170, 0.140, 1.225);
+    z-index: 2;
 }
 
 .action-item-slice .top,
@@ -205,35 +202,37 @@ footer a:hover {
     position: relative;
     height: 12px;
     overflow: hidden;
-    transition: all 300ms cubic-bezier(1.000, -0.055, 0.025, 1.040);
-    /* --- MODIFIED: The text split is now delayed by 650ms (65% of 1s) --- */
-    transition-delay: 0.65s;
+    /* The text split transition */
+    transition: all 0.3s cubic-bezier(1.000, -0.055, 0.025, 1.040);
 }
 
-.action-item-slice .top { top: 0; }
-.action-item-slice .bottom { bottom: 0; }
+/* --- MODIFIED: On the .active state, we now DELAY the split --- */
+.action-item-slice.active .top,
+.action-item-slice.active .bottom {
+    transition-delay: 0.25s; /* This is your requested 0.25s delay */
+}
+
+.action-item-slice .top { top: 0; transition-delay: 0s; }
+.action-item-slice .bottom { bottom: 0; transition-delay: 0s; }
 .action-item-slice .bottom span { position: absolute; top: -12px; left: 0; width: 100%; }
 
-/* --- Animation when .active --- */
 .action-item-slice.active {
     color: white;
-    border-color: #34D399;
+    border-color: #34D393;
     background-color: #34D399;
 }
 
 .action-item-slice.active::before {
-    right: 110%; /* Shears fly all the way across */
-    background-color: white; /* Shears turn white */
-    transform: translateY(-50%) rotate(70deg); /* Subtle rotation change for flair */
+    right: 110%;
+    transform: translateY(-50%) rotate(45deg);
 }
 
 .action-item-slice.active::after {
-    width: 100%; /* Cutline extends across the whole button */
-    background-color: white; /* Cutline turns white */
+    width: 100%;
 }
 
-.action-item-slice.active .top { top: -8px; transition-delay: 0s; }
-.action-item-slice.active .bottom { bottom: -8px; transition-delay: 0s; }
+.action-item-slice.active .top { top: -8px; }
+.action-item-slice.active .bottom { bottom: -8px; }
 
 /* --- Main Button Styles (Unchanged) --- */
 .button-container, #mark-complete-btn {
