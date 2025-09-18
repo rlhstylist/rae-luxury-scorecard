@@ -140,7 +140,7 @@ footer a {
 footer a:hover {
     text-decoration: underline;
 }
-/* Checklist Page Styles (V12 - Final Animation: The "Slice" - Performant & Reliable) */
+/* Checklist Page Styles (V13 - The True Final Animation) */
 #action-item-container {
     display: flex;
     flex-direction: column;
@@ -161,51 +161,55 @@ footer a:hover {
     background-color: var(--card-background);
     cursor: pointer;
     position: relative;
-    overflow: hidden; /* Hide the line when it's off-screen */
-    transition: background-color 0.4s ease-out; /* Smooth transition for the active state */
+    /* Note: No overflow:hidden */
+    transition: all 0.5s cubic-bezier(0.890, -0.170, 0.140, 1.225);
 }
 
-/* We are now only using ONE pseudo-element: the cutline */
+/* The Cutline Element */
 .action-item-slice::after {
     content: '';
+    height: 2px;
+    width: 0;
+    /* The cutline is always black */
+    background-color: var(--text-primary); 
     position: absolute;
     top: 50%;
-    left: 0;
-    height: 2px;
-    width: 100%;
-    background-color: var(--text-primary); /* The black cutline */
-    
-    /* FIX: Using transform to prevent 'shake' on mobile. Start off-screen to the right. */
-    transform: translateX(101%);
-    
-    /* This transition is INSTANT when the button becomes inactive */
-    transition: transform 0s; 
+    right: 0;
+    transform: translateY(-50%);
+    transition: all 0.5s cubic-bezier(0.890, -0.170, 0.140, 1.225);
 }
 
-/* --- THE ANIMATION --- */
-/* When the button is clicked, animate the line across the screen */
-.action-item-slice.active::after {
-    transform: translateX(-101%);
-    /* A fast, smooth 0.5s animation */
-    transition: transform 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-}
-
-/* The button's final 'on' state */
-.action-item-slice.active {
-    background-color: #f4f4f0; /* A subtle, luxurious gray highlight */
-    border-color: rgba(0,0,0,0.15);
-}
-
-/* We are no longer using the .top and .bottom elements for an effect */
+/* The Slicing Text Elements */
 .action-item-slice .top,
 .action-item-slice .bottom {
-   display: none; /* Hide the duplicate text elements */
+    position: relative;
+    height: 12px;
+    overflow: hidden;
+    transition: all 0.3s cubic-bezier(1.000, -0.055, 0.025, 1.040);
+    /* The text will split after a 0.25s delay */
+    transition-delay: 0.25s; 
 }
-/* We need a single span for the text now */
-.action-item-slice span {
-    display: block;
-    text-align: center;
+
+.action-item-slice .top { top: 0; }
+.action-item-slice .bottom { bottom: 0; }
+.action-item-slice .bottom span { position: absolute; top: -12px; left: 0; width: 100%; }
+
+/* --- The Animation When Active --- */
+.action-item-slice.active {
+    color: white; /* Text turns white */
+    border-color: #34D393;
+    background-color: #34D399; /* Background turns green */
 }
+
+.action-item-slice.active::after {
+    width: 100%;
+    /* --- THIS IS THE KEY --- */
+    /* We DO NOT change the background color here, so it stays black */
+}
+
+/* Reset the delay so the text splits immediately */
+.action-item-slice.active .top { top: -8px; transition-delay: 0s; }
+.action-item-slice.active .bottom { bottom: -8px; transition-delay: 0s; }
 
 /* --- Main Button Styles (Unchanged) --- */
 .button-container, #mark-complete-btn {

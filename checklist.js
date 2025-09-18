@@ -32,8 +32,11 @@ async function loadActionItems() {
         button.dataset.itemId = item.id;
         
         // --- THIS IS THE CORRECTED PART ---
-        // We are now creating a simple span, not the complex top/bottom divs.
-        button.innerHTML = `<span>${item.title}</span>`;
+        // We are restoring the top/bottom divs for the slicing text effect.
+        button.innerHTML = `
+            <div class="top"><span>${item.title}</span></div>
+            <div class="bottom"><span>${item.title}</span></div>
+        `;
 
         button.addEventListener('click', () => {
             button.classList.toggle('active');
