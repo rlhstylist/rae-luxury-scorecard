@@ -2,7 +2,7 @@
 
 // --- SUPABASE CLIENT SETUP ---
 // NOTE: Replace with your actual Supabase URL and Key
-const SUPABASE_URL = 'https://wditvvizexcwtkzllltn.supabase.co
+const SUPABASE_URL = 'https://wditvvizexcwtkzllltn.supabase.com
 ';
 const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6IndkaXR2dml6ZXhjd3RremxsbHRuIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTgxNDc4ODUsImV4cCI6MjA3MzcyMzg4NX0.6snZfp6_ktod8lS-AgYJlkPI397OmOCtgG06fmO816I
 ';
