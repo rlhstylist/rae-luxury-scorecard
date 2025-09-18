@@ -287,24 +287,22 @@ footer a:hover {
 With these files created and modified, the Core Scorecard UI is now established. The next steps will involve replacing the mock `kpiData` object with live data by implementing tasks `SC-103` and `SC-104`.
 /* === Integrated Scorecard Styles === */
 
-/* === Refined KPI Header Summary Styles (Corrected) === */
+/* === Refined KPI Header Summary Styles (Corrected Colors & Layout) === */
 #kpi-summary-container {
     display: grid;
     /* Mobile First: 2x2 grid is the default */
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: 1fr 1fr; /* Explicitly 2 columns */
     gap: 15px;
-    padding: 15px;
+    padding: 20px 15px;
     max-width: 900px;
     margin: 0 auto;
 }
 
-/* Find and replace the .kpi-card rule in style.css */
 .kpi-card {
-    /* REMOVED background-color, border-radius, padding, and box-shadow */
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: space-between;
+    justify-content: flex-start;
     text-align: center;
 }
 
@@ -318,7 +316,7 @@ With these files created and modified, the Core Scorecard UI is now established.
 .kpi-dial-svg {
     width: 100%;
     height: 100%;
-    transform: rotate(-210deg); /* Start arc at the bottom-left */
+    transform: rotate(-210deg);
 }
 
 .kpi-dial-track, .kpi-dial-progress {
@@ -328,11 +326,11 @@ With these files created and modified, the Core Scorecard UI is now established.
 }
 
 .kpi-dial-track {
-    stroke: #444;
+    stroke: #e0e0e0; /* Lighter track for better contrast on light BG */
 }
 
 .kpi-dial-progress {
-    stroke: url(#gradient-gold); /* Default to gold gradient */
+    stroke: url(#gradient-gold);
     transition: stroke-dashoffset 1.2s cubic-bezier(0.25, 0.8, 0.25, 1);
 }
 
@@ -347,14 +345,16 @@ With these files created and modified, the Core Scorecard UI is now established.
     justify-content: center;
 }
 
+/* --- COLOR FIX --- */
 .kpi-current-value {
-    color: #fff;
+    color: #1c1c1e; /* Dark color for readability */
     font-size: 1.8em;
     font-weight: 600;
 }
 
+/* --- COLOR FIX --- */
 .kpi-label {
-    color: #aaa;
+    color: #555; /* Darker gray */
     font-size: 0.75em;
     font-weight: 500;
     text-transform: uppercase;
@@ -362,8 +362,9 @@ With these files created and modified, the Core Scorecard UI is now established.
     margin-bottom: 5px;
 }
 
+/* --- COLOR FIX --- */
 .kpi-target {
-    color: #888;
+    color: #777; /* Darker gray */
     font-size: 0.7em;
 }
 
