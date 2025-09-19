@@ -1,3 +1,5 @@
+// main.js (Corrected Version)
+
 // Import the Supabase client library
 import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm';
 
@@ -13,9 +15,9 @@ const supabase = createClient(supabaseUrl, supabaseAnonKey);
 async function loadStylistProfiles() {
     const grid = document.getElementById('stylist-selection-grid');
 
-    // Fetch data from the 'stylists' table (with a lowercase 's')
+    // Fetch data from the 'stylists' table
     const { data: stylists, error } = await supabase
-        .from('stylists') // <--- THIS IS THE FIX
+        .from('stylists')
         .select('*')
         .order('name'); // Sort them alphabetically
 
@@ -52,14 +54,14 @@ async function loadStylistProfiles() {
         tile.appendChild(level);
 
         // Add click event listener to save stylist info and navigate
-tile.addEventListener('click', () => {
-    // Store the entire stylist object in the browser's local storage
-    // We use JSON.stringify to convert the object to a string for storage
-    localStorage.setItem('selectedStylist', JSON.stringify(stylist));
+        tile.addEventListener('click', () => {
+            // --- THIS IS THE FIX ---
+            // We are now using 'loggedInStylist' to match what dashboard.js expects.
+            localStorage.setItem('loggedInStylist', JSON.stringify(stylist));
 
-    // Redirect the browser to the new dashboard page
-    window.location.href = 'dashboard.html';
-});
+            // Redirect the browser to the new dashboard page
+            window.location.href = 'dashboard.html';
+        });
 
         grid.appendChild(tile);
     }
